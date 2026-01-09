@@ -22,7 +22,7 @@
     --border2:rgba(255,255,255,.14);
     --white:#fff;
 
-    /* sticky heights (JS updates) */
+    /* sticky heights (JS will update) */
     --ann-h: 44px;
     --prog-h: 3px;
     --top-h: 64px;
@@ -59,7 +59,7 @@
     z-index:1;
   }
 
-  /* Keep overlays above everything */
+  /* Keep page layers below overlays */
   .announce, .progress-wrap, .topbar, #community, .strip, .section-shell, footer { position:relative; z-index:2; }
 
   .reveal{ opacity:0; transform:translateY(16px); transition:.7s ease; }
@@ -308,8 +308,17 @@
     transition:.2s ease;
   }
   .drawer .drawer-close:hover{ background:rgba(255,255,255,.12); transform:translateY(-1px); }
-  .drawer-title{ font-weight:900; letter-spacing:.4px; opacity:.92; margin-top:2px; }
-  .drawer-primary{ display:grid; gap:10px; margin-top:6px; }
+  .drawer-title{
+    font-weight:900;
+    letter-spacing:.4px;
+    opacity:.92;
+    margin-top:2px;
+  }
+  .drawer-primary{
+    display:grid;
+    gap:10px;
+    margin-top:6px;
+  }
   .drawer a, .drawer button{
     display:flex;
     padding:14px 14px;
@@ -333,6 +342,8 @@
   }
   .drawer-open .drawer-overlay{ opacity:1; pointer-events:auto; }
   .drawer-open .drawer{ transform:translateX(0); }
+
+  /* Lock scroll when drawer open */
   body.drawer-open{ overflow:hidden; touch-action:none; }
 
   /* Banner */
@@ -362,19 +373,14 @@
     backdrop-filter: blur(8px);
   }
   .hero-text{
-    position:static;
-    transform:none;
     width:100%;
     font-weight:900; letter-spacing:.4px;
     font-size:clamp(18px, 2.2vw, 34px);
     text-shadow:0 10px 30px rgba(0,0,0,.55);
     padding:0 6px;
-    pointer-events:none;
     line-height:1.15;
   }
   .community-btn a{
-    position:static;
-    transform:none;
     pointer-events:auto;
     padding:16px 26px;
     background:#fff; color:#000;
@@ -670,6 +676,9 @@
   .sister-go:hover{ background:rgba(255,255,255,.12); transform:translateY(-1px); }
   .sister-go span{ font-weight:900; font-size:20px; }
 
+  /* Contact */
+  .contact p{ margin-bottom:10px; }
+
   /* Footer */
   footer{
     background:#0b0b0b;
@@ -733,7 +742,7 @@
     justify-content:center;
     flex-wrap:wrap;
   }
-  .footer-legal button{
+  .legal-btn{
     font-size:12px;
     padding:8px 10px;
     border-radius:12px;
@@ -744,9 +753,9 @@
     color:#fff;
     cursor:pointer;
   }
-  .footer-legal button:hover{ background:rgba(255,255,255,.12); transform:translateY(-1px); }
+  .legal-btn:hover{ background:rgba(255,255,255,.12); transform:translateY(-1px); }
 
-  /* Modals (base) */
+  /* Base modals */
   .modal-overlay{
     position:fixed; inset:0;
     background:rgba(0,0,0,.78);
@@ -809,7 +818,7 @@
   body.donate-open #donateOverlay{ opacity:1; pointer-events:auto; }
   body.donate-open #donateModal{ opacity:1; pointer-events:auto; transform:translate(-50%,-50%) scale(1); }
 
-  /* NEW: Legal open */
+  /* Legal open (NEW) */
   body.legal-open #legalOverlay{ opacity:1; pointer-events:auto; }
   body.legal-open #legalModal{ opacity:1; pointer-events:auto; transform:translate(-50%,-50%) scale(1); }
 
@@ -888,7 +897,7 @@
   .modal-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; }
   .btn-mid{ min-width:120px; }
 
-  /* News modal layout */
+  /* News modal */
   .news-modal-body{
     display:grid;
     grid-template-columns: 1fr;
@@ -907,7 +916,7 @@
   .news-modal-meta{ display:flex; gap:10px; flex-wrap:wrap; }
   .news-modal-text{ color:var(--muted); font-weight:700; line-height:1.7; }
 
-  /* iOS modal layout */
+  /* iOS modal */
   .ios-body{
     display:grid;
     grid-template-columns: 1.1fr 0.9fr;
@@ -915,6 +924,13 @@
     padding:6px;
     text-align:left;
   }
+  .ios-gallery{
+    border:1px solid var(--border2);
+    background:#0b0b0b;
+    border-radius:16px;
+    overflow:hidden;
+  }
+  .ios-gallery img{ border-radius:0; width:100%; height:auto; display:block; }
   .ios-thumbs{
     display:grid;
     grid-template-columns:repeat(5, 1fr);
@@ -953,7 +969,7 @@
     font-size:13px;
   }
 
-  /* Donate modal body */
+  /* Donate modal */
   .donate-body{
     padding:10px 6px 6px;
     text-align:left;
@@ -962,42 +978,51 @@
     line-height:1.7;
   }
 
-  /* NEW: Legal modal (scroll ONLY inside text area) */
+  /* LEGAL MODAL (NEW) */
   .legal-shell{
-    padding:8px 6px 6px;
-    display:flex;
-    flex-direction:column;
-    gap:12px;
+    padding:6px;
     text-align:left;
+  }
+  .legal-top{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:10px;
+  }
+  .legal-title{
+    font-size:22px;
+    font-weight:900;
+    letter-spacing:.2px;
   }
   .legal-meta{
     display:flex;
     gap:10px;
     flex-wrap:wrap;
-    align-items:center;
+    margin-top:8px;
   }
-  .legal-pill{
-    border:1px solid var(--border2);
-    background:rgba(255,255,255,.05);
-    padding:8px 10px;
-    border-radius:999px;
-    font-weight:900;
+  .legal-meta .news-pill{
     font-size:12px;
-    color:rgba(255,255,255,.9);
+    font-weight:900;
+  }
+
+  /* IMPORTANT: body should not scroll when legal modal is open.
+     Only this text area scrolls. */
+  #legalModal{
+    overflow:hidden; /* no modal page scroll */
   }
   .legal-scroll{
-    border:1px solid rgba(255,255,255,.10);
+    margin-top:10px;
+    border:1px solid var(--border2);
     background:rgba(255,255,255,.03);
     border-radius:16px;
     padding:14px;
+    max-height: calc(100vh - 230px);
     overflow:auto;
     -webkit-overflow-scrolling: touch;
-
-    /* IMPORTANT: this is the only scrollable area */
-    max-height: 54vh;
   }
   .legal-scroll p{
-    margin:0 0 10px;
+    margin:0 0 12px;
     color:var(--muted);
     font-weight:700;
     line-height:1.75;
@@ -1023,7 +1048,14 @@
   }
   .to-top:hover{ background:rgba(255,255,255,.14); transform:translateY(-2px); }
   .to-top.show{ opacity:1; pointer-events:auto; }
-  body.drawer-open .to-top{ opacity:0 !important; pointer-events:none !important; }
+
+  /* Hide to-top when drawer or modal open */
+  body.drawer-open .to-top,
+  body.product-open .to-top,
+  body.news-open .to-top,
+  body.ios-open .to-top,
+  body.donate-open .to-top,
+  body.legal-open .to-top{ opacity:0 !important; pointer-events:none !important; }
 
   @media (max-width: 920px){ .nav-tabs{ display:none; } }
 
@@ -1053,9 +1085,6 @@
       border-radius:18px;
     }
     .community-btn a{ font-size:16px; padding:14px 20px; }
-
-    /* Legal scroll area slightly smaller on mobile */
-    .legal-scroll{ max-height: 50vh; padding:12px; }
   }
 
   @media (max-width: 900px){
@@ -1070,14 +1099,16 @@
     .ios-thumbs{ grid-template-columns:repeat(3, 1fr); }
   }
 
-  /* Smaller modals on small screens */
+  /* Smaller modals on mobile */
   @media (max-width: 560px){
     .modal{
       width: min(520px, 94vw);
       padding:12px;
       border-radius:16px;
     }
-    .modal-header{ padding:6px 4px 10px; }
+    .modal-header{
+      padding:6px 4px 10px;
+    }
 
     #productModal .modal-body{ gap:12px; }
     #productModal .modal-right h2{ font-size:20px; }
@@ -1089,9 +1120,11 @@
     #iosModal .ios-thumbs{ gap:8px; }
     #iosModal .ios-thumb{ border-radius:12px; }
 
-    /* Legal: tighter */
-    .legal-pill{ padding:7px 10px; }
-    .legal-scroll{ max-height: 52vh; }
+    .legal-title{ font-size:20px; }
+    .legal-scroll{
+      padding:12px;
+      max-height: calc(100vh - 220px);
+    }
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -1218,6 +1251,7 @@
 <!-- Banner -->
 <section id="community" class="reveal">
   <img src="ourbannerzafrili.jpg" alt="Shop Zafrili Today on Roblox!" />
+
   <div class="hero-overlay">
     <div class="hero-box">
       <div class="hero-text" id="heroText">Shop Zafrili Today on Roblox!</div>
@@ -1242,11 +1276,9 @@
 <div class="section-shell reveal" id="about">
   <div class="container section-pad">
     <h2 id="aboutTitle">About Us</h2>
-    <p id="aboutText" style="color:var(--muted); max-width:900px; margin:0 auto; font-weight:700;">
-      Zafrili is a Roblox UGC clothing brand creating modern, high-quality virtual apparel for the Roblox community. We design clean, streetwear-inspired pieces that help players express their identity in-game.
 
-      Built at the intersection of gaming, fashion, and digital culture, Zafrili focuses on consistent drops, accessible pricing, and community-driven creativity.
-    </p>
+    <!-- JS renders paragraphs here (based on i18n aboutText) -->
+    <div id="aboutTextWrap" style="max-width:900px; margin:0 auto;"></div>
   </div>
 </div>
 
@@ -1330,7 +1362,7 @@
       </div>
       <div class="news-one-body">
         <div class="news-meta">
-          <span class="news-pill" id="newsCardDate">01/05/2026</span>
+          <span class="news-pill" id="newsCardDate">01/09/2026</span>
           <span class="news-pill" id="newsCardBy">Zafrili</span>
         </div>
         <div class="news-title" id="newsCardHeadline">Zafrili Launch Week</div>
@@ -1400,11 +1432,10 @@
     <div class="footer-copy" id="footerCopy">
       ©2026. Zafrili. All Rights Reserved. All purchases happen in Roblox.
     </div>
-
-    <!-- NEW: Buttons open popup (no navigation) -->
     <div class="footer-legal">
-      <button type="button" id="termsLink">Terms and Conditions</button>
-      <button type="button" id="privacyLink">Privacy Policy</button>
+      <!-- NEW: buttons open popup instead of leaving page -->
+      <button class="legal-btn" type="button" id="termsBtn">Terms and Conditions</button>
+      <button class="legal-btn" type="button" id="privacyBtn">Privacy Policy</button>
     </div>
   </div>
 </footer>
@@ -1480,12 +1511,16 @@
 
   <div class="ios-body">
     <div>
+      <div class="ios-gallery">
+        <img id="iosMainImg" src="ios1.jpeg" alt="iOS step preview">
+      </div>
+
       <div class="ios-thumbs" id="iosThumbs">
-        <button class="ios-thumb" type="button" data-src="ios1.png"><img src="ios1.jpeg" alt="Step 1"></button>
+        <button class="ios-thumb" type="button" data-src="ios1.jpeg"><img src="ios1.jpeg" alt="Step 1"></button>
         <button class="ios-thumb" type="button" data-src="ios2.png"><img src="ios2.png" alt="Step 2"></button>
-        <button class="ios-thumb" type="button" data-src="ios3.png"><img src="ios3.jpeg" alt="Step 3"></button>
-        <button class="ios-thumb" type="button" data-src="ios4.png"><img src="ios4.jpeg" alt="Step 4"></button>
-        <button class="ios-thumb" type="button" data-src="ios5.png"><img src="ios5.jpeg" alt="Step 5"></button>
+        <button class="ios-thumb" type="button" data-src="ios3.jpeg"><img src="ios3.jpeg" alt="Step 3"></button>
+        <button class="ios-thumb" type="button" data-src="ios4.jpeg"><img src="ios4.jpeg" alt="Step 4"></button>
+        <button class="ios-thumb" type="button" data-src="ios5.jpeg"><img src="ios5.jpeg" alt="Step 5"></button>
       </div>
     </div>
 
@@ -1518,7 +1553,7 @@
   </div>
 </div>
 
-<!-- NEW: LEGAL MODAL (Terms / Privacy) -->
+<!-- LEGAL MODAL (NEW) -->
 <div class="modal-overlay" id="legalOverlay"></div>
 <div class="modal" id="legalModal" role="dialog" aria-modal="true" aria-label="Legal">
   <div class="modal-header">
@@ -1527,13 +1562,20 @@
   </div>
 
   <div class="legal-shell">
-    <div class="legal-meta">
-      <span class="legal-pill" id="legalUpdatedPill">Updated: 01/09/2026</span>
-      <span class="legal-pill" id="legalLastUpdatedPill">Last updated: 01/09/2026</span>
+    <div class="legal-top">
+      <div>
+        <div class="legal-title" id="legalTitle">Terms and Conditions</div>
+        <div class="legal-meta">
+          <span class="news-pill" id="legalUpdatedLabel">Updated:</span>
+          <span class="news-pill" id="legalUpdatedValue">01/09/2026</span>
+          <span class="news-pill" id="legalLastUpdatedLabel">Last Updated:</span>
+          <span class="news-pill" id="legalLastUpdatedValue">01/09/2026</span>
+        </div>
+      </div>
     </div>
 
-    <!-- Scroll ONLY this box -->
-    <div class="legal-scroll" id="legalText" aria-label="Legal text"></div>
+    <!-- Scrollable area ONLY -->
+    <div class="legal-scroll" id="legalBody" aria-label="Legal text"></div>
   </div>
 </div>
 
@@ -1660,45 +1702,31 @@
     headline: "Zafrili Launches Its New Website With a Faster, Smarter Experience",
     by: "By: Zafrili",
     date: "01/09/2026",
-    text: "Zafrili has officially launched its newly redesigned website, delivering a cleaner interface, improved performance, and a more intuitive user experience across all devices. The update focuses on making it easier for users to explore Roblox UGC outfits, view catalog details, and stay up to date with the latest news—all in one streamlined platform. The new website introduces smoother navigation, refined visuals, and optimized functionality designed for both desktop and mobile users. This launch marks an important step in Zafrili’s continued commitment to improving accessibility, usability, and overall quality for its growing community.\n\nMore features and enhancements are planned as Zafrili continues to evolve the platform and expand its offerings.",
+    text: "Zafrili has officially launched its newly redesigned website, delivering a cleaner interface, improved performance, and a more intuitive user experience across all devices.\n\nThe update focuses on making it easier for users to explore Roblox UGC outfits, view catalog details, and stay up to date with the latest news—all in one streamlined platform.\n\nMore features and enhancements are planned as Zafrili continues to evolve the platform and expand its offerings.",
   };
 
-  /* NEW: Terms / Privacy content (edit these anytime) */
-  const LEGAL_CONTENT = {
+  /* NEW: Legal content */
+  const LEGAL_DOCS = {
     terms: {
-      title_en: "Terms and Conditions",
-      title_fr: "Conditions générales",
+      title: "Terms and Conditions",
       updated: "01/09/2026",
       lastUpdated: "01/09/2026",
-      paragraphs_en: [
-        "These Terms and Conditions govern your use of the Zafrili website. By using this site, you agree to follow these terms.",
-        "All catalog links and purchases happen on Roblox. Zafrili does not process payments on this website.",
-        "Content on this site (including images, branding, and text) belongs to Zafrili or its licensors. Do not copy or reuse without permission.",
-        "We may update the website and these terms at any time. Continued use of the site means you accept the latest version."
-      ],
-      paragraphs_fr: [
-        "Ces conditions générales régissent votre utilisation du site Zafrili. En utilisant ce site, vous acceptez ces conditions.",
-        "Tous les liens du catalogue et les achats se font sur Roblox. Zafrili ne traite aucun paiement sur ce site.",
-        "Le contenu de ce site (images, marque, texte) appartient à Zafrili ou à ses concédants. Ne pas copier ni réutiliser sans autorisation.",
-        "Nous pouvons mettre à jour le site et ces conditions à tout moment. Continuer à utiliser le site signifie accepter la dernière version."
+      paragraphs: [
+        "These Terms and Conditions govern your use of the Zafrili website and related services. By accessing or using this site, you agree to these terms.",
+        "All purchases referenced on this website occur on Roblox through official product links. Zafrili does not process payments on this website.",
+        "You agree not to misuse the site, attempt to disrupt services, or access areas you are not authorized to use.",
+        "Zafrili may update these terms at any time. Continued use of the website after changes means you accept the updated terms."
       ]
     },
     privacy: {
-      title_en: "Privacy Policy",
-      title_fr: "Politique de confidentialité",
+      title: "Privacy Policy",
       updated: "01/09/2026",
       lastUpdated: "01/09/2026",
-      paragraphs_en: [
-        "Zafrili respects your privacy. This website is primarily informational and links you to Roblox to view or purchase items.",
-        "We may collect basic, non-identifying technical data (like device type or page performance) to improve the website experience.",
-        "We do not sell your personal information. Purchases and account details are handled by Roblox under their own policies.",
-        "If you contact us by email, we use your message only to respond and provide support."
-      ],
-      paragraphs_fr: [
-        "Zafrili respecte votre vie privée. Ce site est principalement informatif et vous redirige vers Roblox pour voir ou acheter des articles.",
-        "Nous pouvons collecter des données techniques de base non identifiantes (type d’appareil, performance) pour améliorer l’expérience du site.",
-        "Nous ne vendons pas vos informations personnelles. Les achats et détails de compte sont gérés par Roblox selon leurs propres politiques.",
-        "Si vous nous contactez par e-mail, nous utilisons votre message uniquement pour répondre et fournir de l’assistance."
+      paragraphs: [
+        "Zafrili respects your privacy. This website is designed to provide product browsing and links to Roblox listings.",
+        "We may collect basic analytics (such as page views and device type) to improve performance and user experience. We do not sell personal information.",
+        "If you contact us by email, we will only use your message to respond to your request and support the community.",
+        "This policy may be updated from time to time. Changes will be reflected in the updated dates shown in this popup."
       ]
     }
   };
@@ -1706,7 +1734,6 @@
   /* =========================
      Behavior
      ========================= */
-
   const body = document.body;
 
   /* Sticky height calculation */
@@ -1726,19 +1753,7 @@
   window.addEventListener('load', updateStickyHeights);
   updateStickyHeights();
 
-  /* Shared body scroll lock for ALL overlays */
-  function lockBodyScroll(){
-    body.style.overflow = 'hidden';
-    body.style.touchAction = 'none';
-  }
-  function unlockBodyScroll(){
-    if(!body.classList.contains('drawer-open')){
-      body.style.overflow = '';
-      body.style.touchAction = '';
-    }
-  }
-
-  // Drawer
+  /* Drawer */
   const hamburgerBtn = document.getElementById('hamburgerBtn');
   const drawerOverlay = document.getElementById('drawerOverlay');
   const drawerClose = document.getElementById('drawerClose');
@@ -1750,15 +1765,14 @@
   }
   function closeDrawer(){
     body.classList.remove('drawer-open');
-    // don’t unlock here: other modals might still be open
-    if(!anyModalOpen()) unlockBodyScroll();
+    unlockBodyScrollIfSafe();
   }
 
-  hamburgerBtn.addEventListener('click', (e) => { e.preventDefault(); openDrawer(); });
+  hamburgerBtn.addEventListener('click', (e) => { e.preventDefault(); openDrawer(); lockBodyScroll(); });
   drawerOverlay.addEventListener('click', closeDrawer);
   drawerClose.addEventListener('click', closeDrawer);
 
-  // Scroll to sections
+  /* Scroll to sections */
   function scrollToSection(id){
     const el = document.getElementById(id);
     if(!el) return;
@@ -1773,10 +1787,12 @@
     });
   });
 
-  // Progress + to-top
+  /* Progress + to-top */
   const progressBar = document.getElementById('progressBar');
   function onScrollUI(){
     if(body.classList.contains('drawer-open')) return;
+    if(anyModalOpen()) return;
+
     const doc = document.documentElement;
     const scrollTop = doc.scrollTop || document.body.scrollTop;
     const scrollHeight = doc.scrollHeight - doc.clientHeight;
@@ -1789,7 +1805,7 @@
   onScrollUI();
   toTopBtn.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
 
-  // Reveal
+  /* Reveal */
   const revealEls = document.querySelectorAll('.reveal');
   const io = new IntersectionObserver((entries) => {
     entries.forEach(en => {
@@ -1801,14 +1817,14 @@
   }, { threshold: 0.12 });
   revealEls.forEach(el => io.observe(el));
 
-  // Marquee clone
+  /* Marquee clone */
   (function setupMarquee(){
     const marquee = document.getElementById('marquee');
     const items = Array.from(marquee.children);
     items.forEach(node => marquee.appendChild(node.cloneNode(true)));
   })();
 
-  // FAQ accordion
+  /* FAQ accordion */
   document.querySelectorAll('.faq-item').forEach(item => {
     const btn = item.querySelector('.faq-q');
     const ans = item.querySelector('.faq-a');
@@ -1829,6 +1845,33 @@
       }
     });
   });
+
+  /* ========= Helpers ========= */
+  function anyModalOpen(){
+    return (
+      body.classList.contains('product-open') ||
+      body.classList.contains('news-open') ||
+      body.classList.contains('ios-open') ||
+      body.classList.contains('donate-open') ||
+      body.classList.contains('legal-open')
+    );
+  }
+
+  function lockBodyScroll(){
+    body.style.overflow = 'hidden';
+    body.style.touchAction = 'none';
+  }
+
+  function unlockBodyScrollIfSafe(){
+    if(body.classList.contains('drawer-open')) return;
+    if(anyModalOpen()) return;
+    body.style.overflow = '';
+    body.style.touchAction = '';
+  }
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
 
   /* ========= Language ========= */
   const langWrap = document.getElementById('langWrap');
@@ -1854,7 +1897,7 @@
       strip4: "ZAFRILI • EST. 2026",
       aboutTitle: "About Us",
       aboutText:
-        "Zafrili is built for clean, modern Roblox outfits — black & white branding, minimal design, and a premium feel across every experience.",
+        "Zafrili is a Roblox UGC clothing brand creating modern, high-quality virtual apparel for the Roblox community. We design clean, streetwear-inspired pieces that help players express their identity in-game.\n\nBuilt at the intersection of gaming, fashion, and digital culture, Zafrili focuses on consistent drops, accessible pricing, and community-driven creativity.",
       catalogTitle: "Our Catalog",
       searchLabel: "Search",
       searchPH: "Search items...",
@@ -1862,6 +1905,14 @@
       pillShirt: "Classic Shirt",
       pillPants: "Pants",
       faqTitle: "FAQ",
+      faqQ1: "Where do I buy Zafrili items?",
+      faqA1: "All purchases happen in Roblox using the official product links on this website.",
+      faqQ2: "Are items tradeable?",
+      faqA2: "Most clothing items are not tradeable. Check the product popup for each item’s details.",
+      faqQ3: "How do I wear the outfit in Roblox?",
+      faqA3: "After buying, open your Roblox Avatar Editor and equip the shirt/pants from your inventory.",
+      faqQ4: "I have a question — how do I contact you?",
+      faqA4: "Email us at contact.zafrili@gmail.com and we’ll get back to you.",
       newsTitle: "News",
       sisterTitle: "Sister Companies",
       sisterDesc: "A sister company focused on building experiences and creative projects.",
@@ -1869,8 +1920,6 @@
       contactDesc: "If you have any questions or inquiries, feel free to reach out to us!",
       emailLabel: "Email us at:",
       footerCopy: "©2026. Zafrili. All Rights Reserved. All purchases happen in Roblox.",
-      terms: "Terms and Conditions",
-      privacy: "Privacy Policy",
       modalHeader: "Product Details",
       madeBy: "Made by:",
       tradeable: "Tradeable:",
@@ -1891,8 +1940,10 @@
       iosStep4: "Rename it if you want, then tap “Add”.",
       iosStep5: "Zafrili will appear on your Home Screen like an app.",
       iosNote: "Tip: If you don’t see “Add to Home Screen”, make sure you’re using Safari.",
+      termsBtn: "Terms and Conditions",
+      privacyBtn: "Privacy Policy",
       legalUpdated: "Updated:",
-      legalLastUpdated: "Last updated:"
+      legalLastUpdated: "Last Updated:"
     },
     fr: {
       annBadge: "BIENVENUE",
@@ -1908,7 +1959,7 @@
       strip4: "ZAFRILI • EST. 2026",
       aboutTitle: "À propos",
       aboutText:
-        "Zafrili crée des tenues Roblox propres et modernes — identité noir & blanc, design minimal, et une finition premium sur toute l’expérience.",
+        "Zafrili est une marque de vêtements UGC Roblox qui crée des tenues virtuelles modernes et de haute qualité pour la communauté Roblox. Nous concevons des pièces streetwear épurées qui permettent aux joueurs d’exprimer leur identité en jeu.\n\nÀ l’intersection du jeu, de la mode et de la culture numérique, Zafrili mise sur des sorties régulières, des prix accessibles et une créativité portée par la communauté.",
       catalogTitle: "Notre catalogue",
       searchLabel: "Rechercher",
       searchPH: "Rechercher des articles...",
@@ -1916,6 +1967,14 @@
       pillShirt: "T-shirt classique",
       pillPants: "Pantalon",
       faqTitle: "FAQ",
+      faqQ1: "Où acheter les articles Zafrili ?",
+      faqA1: "Tous les achats se font sur Roblox via les liens officiels sur ce site.",
+      faqQ2: "Les articles sont-ils échangeables ?",
+      faqA2: "La plupart des vêtements ne sont pas échangeables. Vérifiez la fenêtre d’info de chaque article.",
+      faqQ3: "Comment porter la tenue dans Roblox ?",
+      faqA3: "Après l’achat, ouvrez l’éditeur d’avatar Roblox et équipez le t-shirt/pantalon depuis votre inventaire.",
+      faqQ4: "J’ai une question — comment vous contacter ?",
+      faqA4: "Écrivez-nous à contact.zafrili@gmail.com et nous vous répondrons.",
       newsTitle: "Actualités",
       sisterTitle: "Sociétés associées",
       sisterDesc: "Une société associée axée sur la création d’expériences et de projets créatifs.",
@@ -1923,8 +1982,6 @@
       contactDesc: "Si vous avez des questions ou des demandes, n’hésitez pas à nous contacter !",
       emailLabel: "Écrivez-nous à :",
       footerCopy: "©2026. Zafrili. Tous droits réservés. Tous les achats se font sur Roblox.",
-      terms: "Conditions générales",
-      privacy: "Politique de confidentialité",
       modalHeader: "Détails du produit",
       madeBy: "Créé par :",
       tradeable: "Échangeable :",
@@ -1945,6 +2002,8 @@
       iosStep4: "Renommez si vous voulez, puis touchez « Ajouter ».",
       iosStep5: "Zafrili apparaîtra sur votre écran d’accueil comme une appli.",
       iosNote: "Astuce : si « Sur l’écran d’accueil » n’apparaît pas, utilisez Safari.",
+      termsBtn: "Conditions générales",
+      privacyBtn: "Politique de confidentialité",
       legalUpdated: "Mis à jour :",
       legalLastUpdated: "Dernière mise à jour :"
     }
@@ -1957,13 +2016,22 @@
     el.textContent = value;
   }
 
+  function renderParagraphs(targetEl, text){
+    const wrap = document.getElementById(targetEl);
+    if(!wrap) return;
+    const parts = String(text || "").split("\n\n").map(x => x.trim()).filter(Boolean);
+    wrap.innerHTML = parts.map(p =>
+      `<p style="margin:0 0 10px; color:var(--muted); font-weight:700;">${escapeHtml(p)}</p>`
+    ).join("");
+  }
+
   function applyLanguage(lang){
     currentLang = (lang === 'fr') ? 'fr' : 'en';
     const t = i18n[currentLang];
 
-    langLabel.textContent = (currentLang === 'fr') ? 'FR' : 'EN';
-    checkEN.textContent = (currentLang === 'en') ? '✓' : '';
-    checkFR.textContent = (currentLang === 'fr') ? '✓' : '';
+    if(langLabel) langLabel.textContent = (currentLang === 'fr') ? 'FR' : 'EN';
+    if(checkEN) checkEN.textContent = (currentLang === 'en') ? '✓' : '';
+    if(checkFR) checkFR.textContent = (currentLang === 'fr') ? '✓' : '';
 
     setText('annBadge', t.annBadge);
     setText('annText', t.annText);
@@ -1981,7 +2049,7 @@
     setText('strip4', t.strip4);
 
     setText('aboutTitle', t.aboutTitle);
-    setText('aboutText', t.aboutText);
+    renderParagraphs('aboutTextWrap', t.aboutText);
 
     setText('catalogTitle', t.catalogTitle);
     setText('searchLabel', t.searchLabel);
@@ -2001,10 +2069,6 @@
     setText('emailLabel', t.emailLabel);
 
     setText('footerCopy', t.footerCopy);
-
-    // footer legal buttons
-    setText('termsLink', t.terms);
-    setText('privacyLink', t.privacy);
 
     setText('modalHeader', t.modalHeader);
     setText('madeByLabel', t.madeBy);
@@ -2029,14 +2093,16 @@
     setText('iosStep5', t.iosStep5);
     setText('iosNote', t.iosNote);
 
-    // keep sticky heights accurate after text change
-    updateStickyHeights();
+    setText('termsBtn', t.termsBtn);
+    setText('privacyBtn', t.privacyBtn);
+    setText('legalUpdatedLabel', t.legalUpdated);
+    setText('legalLastUpdatedLabel', t.legalLastUpdated);
 
-    // if legal modal is open, re-render its pills with translated labels
-    if(body.classList.contains('legal-open')) renderLegal(lastLegalType);
+    updateStickyHeights();
   }
 
   const setLangExpanded = (open) => {
+    if(!langWrap || !langBtn) return;
     langWrap.classList.toggle('open', open);
     langBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
   };
@@ -2060,7 +2126,7 @@
   });
   document.addEventListener('click', () => { if(langWrap) setLangExpanded(false); });
 
-  // Default language
+  /* Default language */
   applyLanguage('en');
 
   /* ========= Catalog modal ========= */
@@ -2108,7 +2174,7 @@
   }
   function closeProductModal(){
     body.classList.remove('product-open');
-    if(!anyModalOpen()) unlockBodyScroll();
+    unlockBodyScrollIfSafe();
   }
 
   function setMainImageByIndex(idx){
@@ -2173,14 +2239,13 @@
     catalogGrid.innerHTML = '';
     slice.forEach((it, localIdx) => {
       const globalIdx = start + localIdx;
-
       const card = document.createElement('div');
       card.className = 'catalog-item';
       card.setAttribute('data-idx', String(globalIdx));
 
       card.innerHTML = `
-        <div class="thumb"><img src="${it.img}" alt="${it.title}"></div>
-        <h3>${it.title}</h3>
+        <div class="thumb"><img src="${it.img}" alt="${escapeHtml(it.title)}"></div>
+        <h3>${escapeHtml(it.title)}</h3>
         <div class="catalog-actions">
           <a class="buy" href="${it.buy}" target="_blank" rel="noopener" data-no-i18n="1">Buy Now</a>
           <button class="info-btn" type="button" aria-label="Open details">i</button>
@@ -2252,11 +2317,7 @@
   const newsModalText = document.getElementById('newsModalText');
 
   function openNews(){ body.classList.add('news-open'); lockBodyScroll(); }
-  function closeNews(){ body.classList.remove('news-open'); if(!anyModalOpen()) unlockBodyScroll(); }
-
-  function escapeHtml(str){
-    return str.replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  }
+  function closeNews(){ body.classList.remove('news-open'); unlockBodyScrollIfSafe(); }
 
   function renderNews(){
     const hasImg = NEWS_ARTICLE.image && NEWS_ARTICLE.image.trim().length > 0;
@@ -2280,7 +2341,7 @@
     newsModalDate.textContent = NEWS_ARTICLE.date;
 
     newsModalText.innerHTML = (NEWS_ARTICLE.text || "")
-      .split("\n")
+      .split("\n\n")
       .map(p => `<p style="margin:0 0 10px;">${escapeHtml(p)}</p>`)
       .join("");
   }
@@ -2294,10 +2355,11 @@
   const iosBtn = document.getElementById('iosBtn');
   const iosOverlay = document.getElementById('iosOverlay');
   const iosClose = document.getElementById('iosClose');
+  const iosMainImg = document.getElementById('iosMainImg');
   const iosThumbs = document.getElementById('iosThumbs');
 
   function openIOS(){ body.classList.add('ios-open'); lockBodyScroll(); }
-  function closeIOS(){ body.classList.remove('ios-open'); if(!anyModalOpen()) unlockBodyScroll(); }
+  function closeIOS(){ body.classList.remove('ios-open'); unlockBodyScrollIfSafe(); }
 
   iosBtn.addEventListener('click', (e) => { e.preventDefault(); openIOS(); });
   iosOverlay.addEventListener('click', closeIOS);
@@ -2307,8 +2369,7 @@
     const btn = e.target.closest('.ios-thumb');
     if(!btn) return;
     const src = btn.getAttribute('data-src');
-    const iosMainImg = document.getElementById('iosMainImg');
-    if(iosMainImg && src) iosMainImg.src = src;
+    if(src) iosMainImg.src = src;
   });
 
   /* ========= Donate modal ========= */
@@ -2318,7 +2379,7 @@
   const donateClose = document.getElementById('donateClose');
 
   function openDonate(){ body.classList.add('donate-open'); lockBodyScroll(); }
-  function closeDonate(){ body.classList.remove('donate-open'); if(!anyModalOpen()) unlockBodyScroll(); }
+  function closeDonate(){ body.classList.remove('donate-open'); unlockBodyScrollIfSafe(); }
 
   function wireDonate(el){
     if(!el) return;
@@ -2333,66 +2394,46 @@
   donateOverlay.addEventListener('click', closeDonate);
   donateClose.addEventListener('click', closeDonate);
 
-  /* ========= NEW: Legal modal ========= */
+  /* ========= LEGAL MODAL (NEW) ========= */
+  const termsBtn = document.getElementById('termsBtn');
+  const privacyBtn = document.getElementById('privacyBtn');
   const legalOverlay = document.getElementById('legalOverlay');
-  const legalModal = document.getElementById('legalModal');
   const legalClose = document.getElementById('legalClose');
+
+  const legalTitle = document.getElementById('legalTitle');
+  const legalUpdatedValue = document.getElementById('legalUpdatedValue');
+  const legalLastUpdatedValue = document.getElementById('legalLastUpdatedValue');
+  const legalBody = document.getElementById('legalBody');
   const legalHeader = document.getElementById('legalHeader');
-  const legalUpdatedPill = document.getElementById('legalUpdatedPill');
-  const legalLastUpdatedPill = document.getElementById('legalLastUpdatedPill');
-  const legalText = document.getElementById('legalText');
 
-  const termsBtn = document.getElementById('termsLink');
-  const privacyBtn = document.getElementById('privacyLink');
+  function renderLegal(key){
+    const doc = LEGAL_DOCS[key] || LEGAL_DOCS.terms;
+    legalHeader.textContent = "Legal";
+    legalTitle.textContent = doc.title;
+    legalUpdatedValue.textContent = doc.updated;
+    legalLastUpdatedValue.textContent = doc.lastUpdated;
 
-  let lastLegalType = 'terms';
+    legalBody.innerHTML = (doc.paragraphs || [])
+      .map(p => `<p>${escapeHtml(p)}</p>`)
+      .join("");
 
-  function anyModalOpen(){
-    return body.classList.contains('product-open')
-      || body.classList.contains('news-open')
-      || body.classList.contains('ios-open')
-      || body.classList.contains('donate-open')
-      || body.classList.contains('legal-open');
+    // reset scroll to top each open
+    legalBody.scrollTop = 0;
   }
 
-  function renderLegal(type){
-    lastLegalType = (type === 'privacy') ? 'privacy' : 'terms';
-    const t = i18n[currentLang];
-    const data = LEGAL_CONTENT[lastLegalType];
-
-    // title
-    legalHeader.textContent = (currentLang === 'fr') ? data.title_fr : data.title_en;
-
-    // updated / last updated pills with translated labels
-    legalUpdatedPill.textContent = `${t.legalUpdated} ${data.updated}`;
-    legalLastUpdatedPill.textContent = `${t.legalLastUpdated} ${data.lastUpdated}`;
-
-    // paragraphs (language-specific)
-    const paras = (currentLang === 'fr') ? data.paragraphs_fr : data.paragraphs_en;
-    legalText.innerHTML = paras.map(p => `<p>${escapeHtml(p)}</p>`).join("");
-
-    // reset scroll to top of legal text
-    legalText.scrollTop = 0;
-  }
-
-  function openLegal(type){
-    closeDrawer();
-    renderLegal(type);
+  function openLegal(key){
+    renderLegal(key);
     body.classList.add('legal-open');
     lockBodyScroll();
-
-    // focus close button for accessibility
     try { legalClose.focus(); } catch(e){}
   }
-
   function closeLegal(){
     body.classList.remove('legal-open');
-    if(!anyModalOpen()) unlockBodyScroll();
+    unlockBodyScrollIfSafe();
   }
 
-  if(termsBtn) termsBtn.addEventListener('click', (e) => { e.preventDefault(); openLegal('terms'); });
-  if(privacyBtn) privacyBtn.addEventListener('click', (e) => { e.preventDefault(); openLegal('privacy'); });
-
+  termsBtn.addEventListener('click', (e) => { e.preventDefault(); openLegal('terms'); });
+  privacyBtn.addEventListener('click', (e) => { e.preventDefault(); openLegal('privacy'); });
   legalOverlay.addEventListener('click', closeLegal);
   legalClose.addEventListener('click', closeLegal);
 
@@ -2415,4 +2456,3 @@
 </script>
 </body>
 </html>
-
