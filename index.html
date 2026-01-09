@@ -177,7 +177,7 @@
   .icon-btn:hover{ transform:translateY(-1px); background:rgba(255,255,255,.12); }
   .icon{ width:18px; height:18px; fill:#fff; }
 
-  /* Language */
+  /* Language (DESKTOP dropdown) */
   .lang-wrap{ position:relative; display:flex; align-items:center; }
   .lang-btn{
     height:40px; padding:0 12px;
@@ -229,6 +229,75 @@
     display:inline-flex; align-items:center; justify-content:center;
     font-size:12px;
   }
+
+  /* Mobile/tablet language popup (NEW) */
+  .lang-mobile{ display:none; }
+  .lang-mobile-btn{
+    width:44px; height:44px;
+    border-radius:14px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.06);
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    transition:.2s ease;
+    cursor:pointer;
+    font-weight:900;
+    color:#fff;
+  }
+  .lang-mobile-btn:hover{ background:rgba(255,255,255,.12); transform:translateY(-1px); }
+  .lang-mobile-label{ font-size:12px; letter-spacing:.4px; opacity:.95; }
+
+  .lang-pop-overlay{
+    position:fixed; inset:0;
+    background:rgba(0,0,0,.72);
+    opacity:0; pointer-events:none;
+    transition:.2s ease;
+    z-index:8500;
+  }
+  .lang-pop{
+    position:fixed; left:50%; top:50%;
+    transform:translate(-50%,-50%) scale(.98);
+    width:min(360px, 92vw);
+    border-radius:18px;
+    border:1px solid var(--border2);
+    background:rgba(14,14,14,.98);
+    backdrop-filter: blur(10px);
+    padding:14px;
+    opacity:0; pointer-events:none;
+    transition:.2s ease;
+    z-index:8510;
+  }
+  .lang-pop-head{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:12px;
+    padding:4px 4px 12px;
+    border-bottom:1px solid rgba(255,255,255,.08);
+    margin-bottom:12px;
+  }
+  .lang-pop-title{
+    font-weight:900;
+    letter-spacing:.3px;
+    opacity:.92;
+  }
+  .lang-pop-close{
+    width:44px; height:44px;
+    border-radius:14px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.06);
+    cursor:pointer;
+    display:inline-flex; align-items:center; justify-content:center;
+    transition:.2s ease;
+    font-weight:900;
+    color:#fff;
+    flex:0 0 auto;
+  }
+  .lang-pop-close:hover{ background:rgba(255,255,255,.12); transform:translateY(-1px); }
+  .lang-pop-list{ display:grid; gap:10px; }
+
+  body.lang-open #langPopOverlay{ opacity:1; pointer-events:auto; }
+  body.lang-open #langPop{ opacity:1; pointer-events:auto; transform:translate(-50%,-50%) scale(1); }
 
   /* Mobile drawer */
   .hamburger{
@@ -818,7 +887,7 @@
   body.donate-open #donateOverlay{ opacity:1; pointer-events:auto; }
   body.donate-open #donateModal{ opacity:1; pointer-events:auto; transform:translate(-50%,-50%) scale(1); }
 
-  /* Legal open (NEW) */
+  /* Legal open */
   body.legal-open #legalOverlay{ opacity:1; pointer-events:auto; }
   body.legal-open #legalModal{ opacity:1; pointer-events:auto; transform:translate(-50%,-50%) scale(1); }
 
@@ -978,7 +1047,7 @@
     line-height:1.7;
   }
 
-  /* LEGAL MODAL (NEW) */
+  /* LEGAL MODAL */
   .legal-shell{
     padding:6px;
     text-align:left;
@@ -1055,7 +1124,8 @@
   body.news-open .to-top,
   body.ios-open .to-top,
   body.donate-open .to-top,
-  body.legal-open .to-top{ opacity:0 !important; pointer-events:none !important; }
+  body.legal-open .to-top,
+  body.lang-open .to-top{ opacity:0 !important; pointer-events:none !important; }
 
   @media (max-width: 920px){ .nav-tabs{ display:none; } }
 
@@ -1063,7 +1133,8 @@
     .hamburger{ display:inline-flex; }
     .top-actions .desktop-only{ display:none; }
     .top-socials{ display:none; }
-    .lang-wrap{ display:none; }
+    .lang-wrap{ display:none; } /* desktop dropdown hidden on mobile/tablet */
+    .lang-mobile{ display:inline-flex; } /* NEW mobile button shows */
 
     .announce-inner{
       justify-content:center;
@@ -1190,6 +1261,7 @@
         </a>
       </div>
 
+      <!-- Desktop language dropdown -->
       <div class="lang-wrap desktop-only" id="langWrap">
         <button class="lang-btn" id="langBtn" type="button" aria-haspopup="menu" aria-expanded="false">
           <span id="langLabel">EN</span><span class="caret"></span>
@@ -1198,6 +1270,13 @@
           <div class="lang-option" data-lang="en" role="menuitem">English <span class="checkmark" id="checkEN">✓</span></div>
           <div class="lang-option" data-lang="fr" role="menuitem">Français <span class="checkmark" id="checkFR"></span></div>
         </div>
+      </div>
+
+      <!-- NEW: Mobile/tablet language popup button (LEFT of hamburger) -->
+      <div class="lang-mobile" id="langMobileWrap">
+        <button class="lang-mobile-btn" id="langMobileBtn" type="button" aria-label="Change language">
+          <span class="lang-mobile-label" id="langMobileLabel">EN</span>
+        </button>
       </div>
 
       <button class="hamburger" id="hamburgerBtn" aria-label="Open menu"><span></span></button>
@@ -1276,8 +1355,6 @@
 <div class="section-shell reveal" id="about">
   <div class="container section-pad">
     <h2 id="aboutTitle">About Us</h2>
-
-    <!-- JS renders paragraphs here (based on i18n aboutText) -->
     <div id="aboutTextWrap" style="max-width:900px; margin:0 auto;"></div>
   </div>
 </div>
@@ -1433,7 +1510,6 @@
       ©2026. Zafrili. All Rights Reserved. All purchases happen in Roblox.
     </div>
     <div class="footer-legal">
-      <!-- NEW: buttons open popup instead of leaving page -->
       <button class="legal-btn" type="button" id="termsBtn">Terms and Conditions</button>
       <button class="legal-btn" type="button" id="privacyBtn">Privacy Policy</button>
     </div>
@@ -1553,7 +1629,7 @@
   </div>
 </div>
 
-<!-- LEGAL MODAL (NEW) -->
+<!-- LEGAL MODAL -->
 <div class="modal-overlay" id="legalOverlay"></div>
 <div class="modal" id="legalModal" role="dialog" aria-modal="true" aria-label="Legal">
   <div class="modal-header">
@@ -1574,8 +1650,20 @@
       </div>
     </div>
 
-    <!-- Scrollable area ONLY -->
     <div class="legal-scroll" id="legalBody" aria-label="Legal text"></div>
+  </div>
+</div>
+
+<!-- NEW: Language popup (mobile/tablet) -->
+<div class="lang-pop-overlay" id="langPopOverlay"></div>
+<div class="lang-pop" id="langPop" role="dialog" aria-modal="true" aria-label="Language">
+  <div class="lang-pop-head">
+    <div class="lang-pop-title">Language</div>
+    <button class="lang-pop-close" id="langPopClose" type="button" aria-label="Close">✕</button>
+  </div>
+  <div class="lang-pop-list" id="langPopList">
+    <div class="lang-option" data-lang="en" role="button">English <span class="checkmark" id="checkEN2">✓</span></div>
+    <div class="lang-option" data-lang="fr" role="button">Français <span class="checkmark" id="checkFR2"></span></div>
   </div>
 </div>
 
@@ -1705,7 +1793,6 @@
     text: "Zafrili has officially launched its newly redesigned website, delivering a cleaner interface, improved performance, and a more intuitive user experience across all devices.\n\nThe update focuses on making it easier for users to explore Roblox UGC outfits, view catalog details, and stay up to date with the latest news—all in one streamlined platform.\n\nMore features and enhancements are planned as Zafrili continues to evolve the platform and expand its offerings.",
   };
 
-  /* NEW: Legal content */
   const LEGAL_DOCS = {
     terms: {
       title: "Terms and Conditions",
@@ -1752,6 +1839,34 @@
   window.addEventListener('resize', updateStickyHeights, { passive:true });
   window.addEventListener('load', updateStickyHeights);
   updateStickyHeights();
+
+  /* ========= Helpers ========= */
+  function anyModalOpen(){
+    return (
+      body.classList.contains('product-open') ||
+      body.classList.contains('news-open') ||
+      body.classList.contains('ios-open') ||
+      body.classList.contains('donate-open') ||
+      body.classList.contains('legal-open') ||
+      body.classList.contains('lang-open')
+    );
+  }
+
+  function lockBodyScroll(){
+    body.style.overflow = 'hidden';
+    body.style.touchAction = 'none';
+  }
+
+  function unlockBodyScrollIfSafe(){
+    if(body.classList.contains('drawer-open')) return;
+    if(anyModalOpen()) return;
+    body.style.overflow = '';
+    body.style.touchAction = '';
+  }
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
 
   /* Drawer */
   const hamburgerBtn = document.getElementById('hamburgerBtn');
@@ -1846,33 +1961,6 @@
     });
   });
 
-  /* ========= Helpers ========= */
-  function anyModalOpen(){
-    return (
-      body.classList.contains('product-open') ||
-      body.classList.contains('news-open') ||
-      body.classList.contains('ios-open') ||
-      body.classList.contains('donate-open') ||
-      body.classList.contains('legal-open')
-    );
-  }
-
-  function lockBodyScroll(){
-    body.style.overflow = 'hidden';
-    body.style.touchAction = 'none';
-  }
-
-  function unlockBodyScrollIfSafe(){
-    if(body.classList.contains('drawer-open')) return;
-    if(anyModalOpen()) return;
-    body.style.overflow = '';
-    body.style.touchAction = '';
-  }
-
-  function escapeHtml(str){
-    return String(str).replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  }
-
   /* ========= Language ========= */
   const langWrap = document.getElementById('langWrap');
   const langBtn = document.getElementById('langBtn');
@@ -1880,6 +1968,16 @@
   const langLabel = document.getElementById('langLabel');
   const checkEN = document.getElementById('checkEN');
   const checkFR = document.getElementById('checkFR');
+
+  /* NEW: mobile popup elements */
+  const langMobileBtn = document.getElementById('langMobileBtn');
+  const langMobileLabel = document.getElementById('langMobileLabel');
+  const langPopOverlay = document.getElementById('langPopOverlay');
+  const langPop = document.getElementById('langPop');
+  const langPopClose = document.getElementById('langPopClose');
+  const checkEN2 = document.getElementById('checkEN2');
+  const checkFR2 = document.getElementById('checkFR2');
+
   let currentLang = 'en';
 
   const i18n = {
@@ -2029,9 +2127,17 @@
     currentLang = (lang === 'fr') ? 'fr' : 'en';
     const t = i18n[currentLang];
 
+    /* labels */
     if(langLabel) langLabel.textContent = (currentLang === 'fr') ? 'FR' : 'EN';
+    if(langMobileLabel) langMobileLabel.textContent = (currentLang === 'fr') ? 'FR' : 'EN';
+
+    /* checkmarks desktop */
     if(checkEN) checkEN.textContent = (currentLang === 'en') ? '✓' : '';
     if(checkFR) checkFR.textContent = (currentLang === 'fr') ? '✓' : '';
+
+    /* checkmarks mobile popup */
+    if(checkEN2) checkEN2.textContent = (currentLang === 'en') ? '✓' : '';
+    if(checkFR2) checkFR2.textContent = (currentLang === 'fr') ? '✓' : '';
 
     setText('annBadge', t.annBadge);
     setText('annText', t.annText);
@@ -2101,6 +2207,7 @@
     updateStickyHeights();
   }
 
+  /* Desktop dropdown open/close */
   const setLangExpanded = (open) => {
     if(!langWrap || !langBtn) return;
     langWrap.classList.toggle('open', open);
@@ -2115,16 +2222,42 @@
     });
   }
   if(langMenu) langMenu.addEventListener('click', (e) => e.stopPropagation());
+  document.addEventListener('click', () => { if(langWrap) setLangExpanded(false); });
 
+  /* NEW: Mobile popup open/close */
+  function openLangPopup(){
+    body.classList.add('lang-open');
+    lockBodyScroll();
+    try { langPopClose.focus(); } catch(e){}
+  }
+  function closeLangPopup(){
+    body.classList.remove('lang-open');
+    unlockBodyScrollIfSafe();
+  }
+  if(langMobileBtn){
+    langMobileBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      // Close drawer if open, so popup is clean
+      closeDrawer();
+      openLangPopup();
+    });
+  }
+  if(langPopOverlay) langPopOverlay.addEventListener('click', closeLangPopup);
+  if(langPopClose) langPopClose.addEventListener('click', closeLangPopup);
+  if(langPop) langPop.addEventListener('click', (e) => e.stopPropagation());
+
+  /* One listener for ALL language options (desktop + mobile popup) */
   document.querySelectorAll('.lang-option').forEach(opt => {
     opt.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
       applyLanguage(opt.dataset.lang);
+      // close both UIs safely
       setLangExpanded(false);
+      closeLangPopup();
     });
   });
-  document.addEventListener('click', () => { if(langWrap) setLangExpanded(false); });
 
   /* Default language */
   applyLanguage('en');
@@ -2394,7 +2527,7 @@
   donateOverlay.addEventListener('click', closeDonate);
   donateClose.addEventListener('click', closeDonate);
 
-  /* ========= LEGAL MODAL (NEW) ========= */
+  /* ========= LEGAL MODAL ========= */
   const termsBtn = document.getElementById('termsBtn');
   const privacyBtn = document.getElementById('privacyBtn');
   const legalOverlay = document.getElementById('legalOverlay');
@@ -2417,7 +2550,6 @@
       .map(p => `<p>${escapeHtml(p)}</p>`)
       .join("");
 
-    // reset scroll to top each open
     legalBody.scrollTop = 0;
   }
 
@@ -2437,7 +2569,7 @@
   legalOverlay.addEventListener('click', closeLegal);
   legalClose.addEventListener('click', closeLegal);
 
-  /* ========= ESC closes modals/drawer ========= */
+  /* ========= ESC closes modals/drawer/popup ========= */
   document.addEventListener('keydown', (e) => {
     if(e.key === 'Escape'){
       closeProductModal();
@@ -2445,6 +2577,7 @@
       closeIOS();
       closeDonate();
       closeLegal();
+      closeLangPopup();
       closeDrawer();
       if(langWrap) langWrap.classList.remove('open');
     }
