@@ -22,7 +22,7 @@
     --border2:rgba(255,255,255,.14);
     --white:#fff;
 
-    /* NEW: sticky heights (JS will update) */
+    /* sticky heights (JS updates) */
     --ann-h: 44px;
     --prog-h: 3px;
     --top-h: 64px;
@@ -35,7 +35,7 @@
   a{ text-decoration:none; color:inherit; }
   img{ max-width:100%; display:block; border-radius:16px; }
 
-  /* FIX: scroll alignment under sticky bars (uses CSS var) */
+  /* Scroll alignment under sticky bars */
   #about, #catalog, #faq, #news, #sister, #contact { scroll-margin-top: calc(var(--sticky-h) + 18px); }
 
   /* White scrollbar */
@@ -59,7 +59,7 @@
     z-index:1;
   }
 
-  /* IMPORTANT: keep overlays above everything */
+  /* Keep overlays above everything */
   .announce, .progress-wrap, .topbar, #community, .strip, .section-shell, footer { position:relative; z-index:2; }
 
   .reveal{ opacity:0; transform:translateY(16px); transition:.7s ease; }
@@ -84,7 +84,6 @@
     font-weight:900; letter-spacing:.3px; font-size:12px;
     flex:0 0 auto;
   }
-  /* FIX #1: allow wrapping on mobile */
   .announce-text{
     font-weight:900; letter-spacing:.4px; opacity:.95;
     white-space:nowrap;
@@ -259,8 +258,6 @@
     transition:.2s ease;
     z-index:200;
   }
-
-  /* FIX #3: redesigned drawer (no scrolling needed) */
   .drawer{
     position:fixed; top:0; right:0;
     height:100%; width:min(86vw, 380px);
@@ -272,9 +269,8 @@
     padding:16px 16px 18px;
     display:flex; flex-direction:column;
     gap:12px;
-    overflow:hidden; /* no page-like scroll */
+    overflow:hidden;
   }
-
   .drawer-top{
     display:flex;
     align-items:center;
@@ -282,7 +278,6 @@
     gap:12px;
     padding-top:6px;
   }
-
   .drawer-socials{
     display:flex;
     gap:8px;
@@ -300,7 +295,6 @@
     transition:.2s ease;
   }
   .drawer-socials a:hover{ background:rgba(255,255,255,.12); transform:translateY(-1px); }
-
   .drawer .drawer-close{
     width:44px; height:44px;
     border-radius:14px;
@@ -314,20 +308,8 @@
     transition:.2s ease;
   }
   .drawer .drawer-close:hover{ background:rgba(255,255,255,.12); transform:translateY(-1px); }
-
-  .drawer-title{
-    font-weight:900;
-    letter-spacing:.4px;
-    opacity:.92;
-    margin-top:2px;
-  }
-
-  .drawer-primary{
-    display:grid;
-    gap:10px;
-    margin-top:6px;
-  }
-
+  .drawer-title{ font-weight:900; letter-spacing:.4px; opacity:.92; margin-top:2px; }
+  .drawer-primary{ display:grid; gap:10px; margin-top:6px; }
   .drawer a, .drawer button{
     display:flex;
     padding:14px 14px;
@@ -342,30 +324,21 @@
     justify-content:flex-start;
   }
   .drawer a:hover, .drawer button:hover{ background:rgba(255,255,255,.12); transform:translateY(-1px); }
-
-  .drawer-spacer{
-    flex:1 1 auto;
-    min-height:10px;
-  }
-
+  .drawer-spacer{ flex:1 1 auto; min-height:10px; }
   .drawer-bottom{
     display:grid;
     gap:10px;
     padding-top:12px;
     border-top:1px solid rgba(255,255,255,.10);
   }
-
   .drawer-open .drawer-overlay{ opacity:1; pointer-events:auto; }
   .drawer-open .drawer{ transform:translateX(0); }
-
-  /* Lock scroll when drawer open */
   body.drawer-open{ overflow:hidden; touch-action:none; }
 
   /* Banner */
   #community{ position:relative; text-align:center; padding:0; }
   #community img{ width:100%; max-height:420px; object-fit:cover; border-radius:0; }
 
-  /* FIX #2: hero overlay container prevents overlap */
   .hero-overlay{
     position:absolute;
     inset:0;
@@ -399,11 +372,10 @@
     pointer-events:none;
     line-height:1.15;
   }
-
   .community-btn a{
     position:static;
     transform:none;
-    pointer-events:auto; /* clickable */
+    pointer-events:auto;
     padding:16px 26px;
     background:#fff; color:#000;
     border-radius:16px;
@@ -698,9 +670,6 @@
   .sister-go:hover{ background:rgba(255,255,255,.12); transform:translateY(-1px); }
   .sister-go span{ font-weight:900; font-size:20px; }
 
-  /* Contact */
-  .contact p{ margin-bottom:10px; }
-
   /* Footer */
   footer{
     background:#0b0b0b;
@@ -764,7 +733,7 @@
     justify-content:center;
     flex-wrap:wrap;
   }
-  .footer-legal a{
+  .footer-legal button{
     font-size:12px;
     padding:8px 10px;
     border-radius:12px;
@@ -773,8 +742,9 @@
     font-weight:800;
     transition:.2s ease;
     color:#fff;
+    cursor:pointer;
   }
-  .footer-legal a:hover{ background:rgba(255,255,255,.12); transform:translateY(-1px); }
+  .footer-legal button:hover{ background:rgba(255,255,255,.12); transform:translateY(-1px); }
 
   /* Modals (base) */
   .modal-overlay{
@@ -823,17 +793,25 @@
   }
   .modal-close:hover{ background:rgba(255,255,255,.12); transform:translateY(-1px); }
 
+  /* Product open */
   body.product-open #modalOverlay{ opacity:1; pointer-events:auto; }
   body.product-open #productModal{ opacity:1; pointer-events:auto; transform:translate(-50%,-50%) scale(1); }
 
+  /* News open */
   body.news-open #newsOverlay{ opacity:1; pointer-events:auto; }
   body.news-open #newsModal{ opacity:1; pointer-events:auto; transform:translate(-50%,-50%) scale(1); }
 
+  /* iOS open */
   body.ios-open #iosOverlay{ opacity:1; pointer-events:auto; }
   body.ios-open #iosModal{ opacity:1; pointer-events:auto; transform:translate(-50%,-50%) scale(1); }
 
+  /* Donate open */
   body.donate-open #donateOverlay{ opacity:1; pointer-events:auto; }
   body.donate-open #donateModal{ opacity:1; pointer-events:auto; transform:translate(-50%,-50%) scale(1); }
+
+  /* NEW: Legal open */
+  body.legal-open #legalOverlay{ opacity:1; pointer-events:auto; }
+  body.legal-open #legalModal{ opacity:1; pointer-events:auto; transform:translate(-50%,-50%) scale(1); }
 
   .modal-body{
     display:grid;
@@ -910,7 +888,7 @@
   .modal-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; }
   .btn-mid{ min-width:120px; }
 
-  /* News modal */
+  /* News modal layout */
   .news-modal-body{
     display:grid;
     grid-template-columns: 1fr;
@@ -937,13 +915,6 @@
     padding:6px;
     text-align:left;
   }
-  .ios-gallery{
-    border:1px solid var(--border2);
-    background:#0b0b0b;
-    border-radius:16px;
-    overflow:hidden;
-  }
-  .ios-gallery img{ border-radius:0; width:100%; height:auto; display:block; }
   .ios-thumbs{
     display:grid;
     grid-template-columns:repeat(5, 1fr);
@@ -991,6 +962,48 @@
     line-height:1.7;
   }
 
+  /* NEW: Legal modal (scroll ONLY inside text area) */
+  .legal-shell{
+    padding:8px 6px 6px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    text-align:left;
+  }
+  .legal-meta{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+  .legal-pill{
+    border:1px solid var(--border2);
+    background:rgba(255,255,255,.05);
+    padding:8px 10px;
+    border-radius:999px;
+    font-weight:900;
+    font-size:12px;
+    color:rgba(255,255,255,.9);
+  }
+  .legal-scroll{
+    border:1px solid rgba(255,255,255,.10);
+    background:rgba(255,255,255,.03);
+    border-radius:16px;
+    padding:14px;
+    overflow:auto;
+    -webkit-overflow-scrolling: touch;
+
+    /* IMPORTANT: this is the only scrollable area */
+    max-height: 54vh;
+  }
+  .legal-scroll p{
+    margin:0 0 10px;
+    color:var(--muted);
+    font-weight:700;
+    line-height:1.75;
+  }
+  .legal-scroll p:last-child{ margin-bottom:0; }
+
   /* Back to top */
   .to-top{
     position:fixed;
@@ -1010,8 +1023,6 @@
   }
   .to-top:hover{ background:rgba(255,255,255,.14); transform:translateY(-2px); }
   .to-top.show{ opacity:1; pointer-events:auto; }
-
-  /* Hide to-top when drawer is open (FIX #3) */
   body.drawer-open .to-top{ opacity:0 !important; pointer-events:none !important; }
 
   @media (max-width: 920px){ .nav-tabs{ display:none; } }
@@ -1022,7 +1033,6 @@
     .top-socials{ display:none; }
     .lang-wrap{ display:none; }
 
-    /* FIX #1: announcement wraps nicely */
     .announce-inner{
       justify-content:center;
       flex-wrap:wrap;
@@ -1036,7 +1046,6 @@
       font-size:13px;
     }
 
-    /* FIX #2: banner spacing */
     #community img{ max-height:360px; }
     .hero-box{
       padding:12px 12px 14px;
@@ -1044,6 +1053,9 @@
       border-radius:18px;
     }
     .community-btn a{ font-size:16px; padding:14px 20px; }
+
+    /* Legal scroll area slightly smaller on mobile */
+    .legal-scroll{ max-height: 50vh; padding:12px; }
   }
 
   @media (max-width: 900px){
@@ -1058,28 +1070,28 @@
     .ios-thumbs{ grid-template-columns:repeat(3, 1fr); }
   }
 
-  /* FIX #4 + #5: smaller modals ONLY on mobile */
+  /* Smaller modals on small screens */
   @media (max-width: 560px){
     .modal{
       width: min(520px, 94vw);
       padding:12px;
       border-radius:16px;
     }
-    .modal-header{
-      padding:6px 4px 10px;
-    }
+    .modal-header{ padding:6px 4px 10px; }
 
-    /* Product modal tighter */
     #productModal .modal-body{ gap:12px; }
     #productModal .modal-right h2{ font-size:20px; }
     #productModal .meta{ grid-template-columns:1fr; }
     #productModal .chip{ font-size:13px; padding:10px; }
 
-    /* iOS modal tighter */
     #iosModal .ios-steps{ padding:12px; }
     #iosModal .ios-note{ font-size:12px; }
     #iosModal .ios-thumbs{ gap:8px; }
     #iosModal .ios-thumb{ border-radius:12px; }
+
+    /* Legal: tighter */
+    .legal-pill{ padding:7px 10px; }
+    .legal-scroll{ max-height: 52vh; }
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -1206,7 +1218,6 @@
 <!-- Banner -->
 <section id="community" class="reveal">
   <img src="ourbannerzafrili.jpg" alt="Shop Zafrili Today on Roblox!" />
-
   <div class="hero-overlay">
     <div class="hero-box">
       <div class="hero-text" id="heroText">Shop Zafrili Today on Roblox!</div>
@@ -1387,9 +1398,11 @@
     <div class="footer-copy" id="footerCopy">
       ©2026. Zafrili. All Rights Reserved. All purchases happen in Roblox.
     </div>
+
+    <!-- NEW: Buttons open popup (no navigation) -->
     <div class="footer-legal">
-      <a href="terms.html" id="termsLink">Terms and Conditions</a>
-      <a href="privacy.html" id="privacyLink">Privacy Policy</a>
+      <button type="button" id="termsLink">Terms and Conditions</button>
+      <button type="button" id="privacyLink">Privacy Policy</button>
     </div>
   </div>
 </footer>
@@ -1465,8 +1478,6 @@
 
   <div class="ios-body">
     <div>
-
-
       <div class="ios-thumbs" id="iosThumbs">
         <button class="ios-thumb" type="button" data-src="ios1.png"><img src="ios1.jpeg" alt="Step 1"></button>
         <button class="ios-thumb" type="button" data-src="ios2.png"><img src="ios2.png" alt="Step 2"></button>
@@ -1502,6 +1513,25 @@
   <div class="donate-body" id="donateBody">
     Donations are coming soon. If you want to support right now, email us at
     <span data-no-i18n="1">contact.zafrili@gmail.com</span> and we’ll set it up.
+  </div>
+</div>
+
+<!-- NEW: LEGAL MODAL (Terms / Privacy) -->
+<div class="modal-overlay" id="legalOverlay"></div>
+<div class="modal" id="legalModal" role="dialog" aria-modal="true" aria-label="Legal">
+  <div class="modal-header">
+    <strong style="opacity:.92;" id="legalHeader">Legal</strong>
+    <button class="modal-close" id="legalClose" aria-label="Close">✕</button>
+  </div>
+
+  <div class="legal-shell">
+    <div class="legal-meta">
+      <span class="legal-pill" id="legalUpdatedPill">Updated: 01/09/2026</span>
+      <span class="legal-pill" id="legalLastUpdatedPill">Last updated: 01/09/2026</span>
+    </div>
+
+    <!-- Scroll ONLY this box -->
+    <div class="legal-scroll" id="legalText" aria-label="Legal text"></div>
   </div>
 </div>
 
@@ -1628,7 +1658,47 @@
     headline: "Zafrili Launches Its New Website With a Faster, Smarter Experience",
     by: "By: Zafrili",
     date: "01/09/2026",
-    text: "Zafrili has officially launched its newly redesigned website, delivering a cleaner interface, improved performance, and a more intuitive user experience across all devices. The update focuses on making it easier for users to explore Roblox UGC outfits, view catalog details, and stay up to date with the latest news—all in one streamlined platform. The new website introduces smoother navigation, refined visuals, and optimized functionality designed for both desktop and mobile users. This launch marks an important step in Zafrili’s continued commitment to improving accessibility, usability, and overall quality for its growing community.  More features and enhancements are planned as Zafrili continues to evolve the platform and expand its offerings. ",
+    text: "Zafrili has officially launched its newly redesigned website, delivering a cleaner interface, improved performance, and a more intuitive user experience across all devices. The update focuses on making it easier for users to explore Roblox UGC outfits, view catalog details, and stay up to date with the latest news—all in one streamlined platform. The new website introduces smoother navigation, refined visuals, and optimized functionality designed for both desktop and mobile users. This launch marks an important step in Zafrili’s continued commitment to improving accessibility, usability, and overall quality for its growing community.\n\nMore features and enhancements are planned as Zafrili continues to evolve the platform and expand its offerings.",
+  };
+
+  /* NEW: Terms / Privacy content (edit these anytime) */
+  const LEGAL_CONTENT = {
+    terms: {
+      title_en: "Terms and Conditions",
+      title_fr: "Conditions générales",
+      updated: "01/09/2026",
+      lastUpdated: "01/09/2026",
+      paragraphs_en: [
+        "These Terms and Conditions govern your use of the Zafrili website. By using this site, you agree to follow these terms.",
+        "All catalog links and purchases happen on Roblox. Zafrili does not process payments on this website.",
+        "Content on this site (including images, branding, and text) belongs to Zafrili or its licensors. Do not copy or reuse without permission.",
+        "We may update the website and these terms at any time. Continued use of the site means you accept the latest version."
+      ],
+      paragraphs_fr: [
+        "Ces conditions générales régissent votre utilisation du site Zafrili. En utilisant ce site, vous acceptez ces conditions.",
+        "Tous les liens du catalogue et les achats se font sur Roblox. Zafrili ne traite aucun paiement sur ce site.",
+        "Le contenu de ce site (images, marque, texte) appartient à Zafrili ou à ses concédants. Ne pas copier ni réutiliser sans autorisation.",
+        "Nous pouvons mettre à jour le site et ces conditions à tout moment. Continuer à utiliser le site signifie accepter la dernière version."
+      ]
+    },
+    privacy: {
+      title_en: "Privacy Policy",
+      title_fr: "Politique de confidentialité",
+      updated: "01/09/2026",
+      lastUpdated: "01/09/2026",
+      paragraphs_en: [
+        "Zafrili respects your privacy. This website is primarily informational and links you to Roblox to view or purchase items.",
+        "We may collect basic, non-identifying technical data (like device type or page performance) to improve the website experience.",
+        "We do not sell your personal information. Purchases and account details are handled by Roblox under their own policies.",
+        "If you contact us by email, we use your message only to respond and provide support."
+      ],
+      paragraphs_fr: [
+        "Zafrili respecte votre vie privée. Ce site est principalement informatif et vous redirige vers Roblox pour voir ou acheter des articles.",
+        "Nous pouvons collecter des données techniques de base non identifiantes (type d’appareil, performance) pour améliorer l’expérience du site.",
+        "Nous ne vendons pas vos informations personnelles. Les achats et détails de compte sont gérés par Roblox selon leurs propres politiques.",
+        "Si vous nous contactez par e-mail, nous utilisons votre message uniquement pour répondre et fournir de l’assistance."
+      ]
+    }
   };
 
   /* =========================
@@ -1637,7 +1707,7 @@
 
   const body = document.body;
 
-  /* ===== NEW: sticky height calculation (Fix #1) ===== */
+  /* Sticky height calculation */
   const announceBar = document.getElementById('announceBar');
   const progressWrap = document.getElementById('progressWrap');
   const topbar = document.getElementById('topbar');
@@ -1654,6 +1724,18 @@
   window.addEventListener('load', updateStickyHeights);
   updateStickyHeights();
 
+  /* Shared body scroll lock for ALL overlays */
+  function lockBodyScroll(){
+    body.style.overflow = 'hidden';
+    body.style.touchAction = 'none';
+  }
+  function unlockBodyScroll(){
+    if(!body.classList.contains('drawer-open')){
+      body.style.overflow = '';
+      body.style.touchAction = '';
+    }
+  }
+
   // Drawer
   const hamburgerBtn = document.getElementById('hamburgerBtn');
   const drawerOverlay = document.getElementById('drawerOverlay');
@@ -1662,18 +1744,19 @@
 
   function openDrawer(){
     body.classList.add('drawer-open');
-    // optional: keep focus on close button for accessibility
     try { drawerClose.focus(); } catch(e){}
   }
   function closeDrawer(){
     body.classList.remove('drawer-open');
+    // don’t unlock here: other modals might still be open
+    if(!anyModalOpen()) unlockBodyScroll();
   }
 
   hamburgerBtn.addEventListener('click', (e) => { e.preventDefault(); openDrawer(); });
   drawerOverlay.addEventListener('click', closeDrawer);
   drawerClose.addEventListener('click', closeDrawer);
 
-  // Scroll to sections (keep URL clean)
+  // Scroll to sections
   function scrollToSection(id){
     const el = document.getElementById(id);
     if(!el) return;
@@ -1691,9 +1774,7 @@
   // Progress + to-top
   const progressBar = document.getElementById('progressBar');
   function onScrollUI(){
-    // If drawer is open, do nothing (Fix #3)
     if(body.classList.contains('drawer-open')) return;
-
     const doc = document.documentElement;
     const scrollTop = doc.scrollTop || document.body.scrollTop;
     const scrollHeight = doc.scrollHeight - doc.clientHeight;
@@ -1779,14 +1860,6 @@
       pillShirt: "Classic Shirt",
       pillPants: "Pants",
       faqTitle: "FAQ",
-      faqQ1: "Where do I buy Zafrili items?",
-      faqA1: "All purchases happen in Roblox using the official product links on this website.",
-      faqQ2: "Are items tradeable?",
-      faqA2: "Most clothing items are not tradeable. Check the product popup for each item’s details.",
-      faqQ3: "How do I wear the outfit in Roblox?",
-      faqA3: "After buying, open your Roblox Avatar Editor and equip the shirt/pants from your inventory.",
-      faqQ4: "I have a question — how do I contact you?",
-      faqA4: "Email us at contact.zafrili@gmail.com and we’ll get back to you.",
       newsTitle: "News",
       sisterTitle: "Sister Companies",
       sisterDesc: "A sister company focused on building experiences and creative projects.",
@@ -1815,7 +1888,9 @@
       iosStep3: "Scroll and tap “Add to Home Screen”.",
       iosStep4: "Rename it if you want, then tap “Add”.",
       iosStep5: "Zafrili will appear on your Home Screen like an app.",
-      iosNote: "Tip: If you don’t see “Add to Home Screen”, make sure you’re using Safari."
+      iosNote: "Tip: If you don’t see “Add to Home Screen”, make sure you’re using Safari.",
+      legalUpdated: "Updated:",
+      legalLastUpdated: "Last updated:"
     },
     fr: {
       annBadge: "BIENVENUE",
@@ -1839,14 +1914,6 @@
       pillShirt: "T-shirt classique",
       pillPants: "Pantalon",
       faqTitle: "FAQ",
-      faqQ1: "Où acheter les articles Zafrili ?",
-      faqA1: "Tous les achats se font sur Roblox via les liens officiels sur ce site.",
-      faqQ2: "Les articles sont-ils échangeables ?",
-      faqA2: "La plupart des vêtements ne sont pas échangeables. Vérifiez la fenêtre d’info de chaque article.",
-      faqQ3: "Comment porter la tenue dans Roblox ?",
-      faqA3: "Après l’achat, ouvrez l’éditeur d’avatar Roblox et équipez le t-shirt/pantalon depuis votre inventaire.",
-      faqQ4: "J’ai une question — comment vous contacter ?",
-      faqA4: "Écrivez-nous à contact.zafrili@gmail.com et nous vous répondrons.",
       newsTitle: "Actualités",
       sisterTitle: "Sociétés associées",
       sisterDesc: "Une société associée axée sur la création d’expériences et de projets créatifs.",
@@ -1875,7 +1942,9 @@
       iosStep3: "Faites défiler et touchez « Sur l’écran d’accueil ». ",
       iosStep4: "Renommez si vous voulez, puis touchez « Ajouter ».",
       iosStep5: "Zafrili apparaîtra sur votre écran d’accueil comme une appli.",
-      iosNote: "Astuce : si « Sur l’écran d’accueil » n’apparaît pas, utilisez Safari."
+      iosNote: "Astuce : si « Sur l’écran d’accueil » n’apparaît pas, utilisez Safari.",
+      legalUpdated: "Mis à jour :",
+      legalLastUpdated: "Dernière mise à jour :"
     }
   };
 
@@ -1930,6 +1999,8 @@
     setText('emailLabel', t.emailLabel);
 
     setText('footerCopy', t.footerCopy);
+
+    // footer legal buttons
     setText('termsLink', t.terms);
     setText('privacyLink', t.privacy);
 
@@ -1958,6 +2029,9 @@
 
     // keep sticky heights accurate after text change
     updateStickyHeights();
+
+    // if legal modal is open, re-render its pills with translated labels
+    if(body.classList.contains('legal-open')) renderLegal(lastLegalType);
   }
 
   const setLangExpanded = (open) => {
@@ -2026,24 +2100,13 @@
   let currentList = [];
   let currentItemIndex = 0;
 
-  function lockBodyScroll(){
-    body.style.overflow = 'hidden';
-    body.style.touchAction = 'none';
-  }
-  function unlockBodyScroll(){
-    if(!body.classList.contains('drawer-open')){
-      body.style.overflow = '';
-      body.style.touchAction = '';
-    }
-  }
-
   function openProductModal(){
     body.classList.add('product-open');
     lockBodyScroll();
   }
   function closeProductModal(){
     body.classList.remove('product-open');
-    unlockBodyScroll();
+    if(!anyModalOpen()) unlockBodyScroll();
   }
 
   function setMainImageByIndex(idx){
@@ -2187,7 +2250,7 @@
   const newsModalText = document.getElementById('newsModalText');
 
   function openNews(){ body.classList.add('news-open'); lockBodyScroll(); }
-  function closeNews(){ body.classList.remove('news-open'); unlockBodyScroll(); }
+  function closeNews(){ body.classList.remove('news-open'); if(!anyModalOpen()) unlockBodyScroll(); }
 
   function escapeHtml(str){
     return str.replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -2229,11 +2292,10 @@
   const iosBtn = document.getElementById('iosBtn');
   const iosOverlay = document.getElementById('iosOverlay');
   const iosClose = document.getElementById('iosClose');
-  const iosMainImg = document.getElementById('iosMainImg');
   const iosThumbs = document.getElementById('iosThumbs');
 
   function openIOS(){ body.classList.add('ios-open'); lockBodyScroll(); }
-  function closeIOS(){ body.classList.remove('ios-open'); unlockBodyScroll(); }
+  function closeIOS(){ body.classList.remove('ios-open'); if(!anyModalOpen()) unlockBodyScroll(); }
 
   iosBtn.addEventListener('click', (e) => { e.preventDefault(); openIOS(); });
   iosOverlay.addEventListener('click', closeIOS);
@@ -2243,7 +2305,8 @@
     const btn = e.target.closest('.ios-thumb');
     if(!btn) return;
     const src = btn.getAttribute('data-src');
-    if(src) iosMainImg.src = src;
+    const iosMainImg = document.getElementById('iosMainImg');
+    if(iosMainImg && src) iosMainImg.src = src;
   });
 
   /* ========= Donate modal ========= */
@@ -2253,7 +2316,7 @@
   const donateClose = document.getElementById('donateClose');
 
   function openDonate(){ body.classList.add('donate-open'); lockBodyScroll(); }
-  function closeDonate(){ body.classList.remove('donate-open'); unlockBodyScroll(); }
+  function closeDonate(){ body.classList.remove('donate-open'); if(!anyModalOpen()) unlockBodyScroll(); }
 
   function wireDonate(el){
     if(!el) return;
@@ -2268,6 +2331,69 @@
   donateOverlay.addEventListener('click', closeDonate);
   donateClose.addEventListener('click', closeDonate);
 
+  /* ========= NEW: Legal modal ========= */
+  const legalOverlay = document.getElementById('legalOverlay');
+  const legalModal = document.getElementById('legalModal');
+  const legalClose = document.getElementById('legalClose');
+  const legalHeader = document.getElementById('legalHeader');
+  const legalUpdatedPill = document.getElementById('legalUpdatedPill');
+  const legalLastUpdatedPill = document.getElementById('legalLastUpdatedPill');
+  const legalText = document.getElementById('legalText');
+
+  const termsBtn = document.getElementById('termsLink');
+  const privacyBtn = document.getElementById('privacyLink');
+
+  let lastLegalType = 'terms';
+
+  function anyModalOpen(){
+    return body.classList.contains('product-open')
+      || body.classList.contains('news-open')
+      || body.classList.contains('ios-open')
+      || body.classList.contains('donate-open')
+      || body.classList.contains('legal-open');
+  }
+
+  function renderLegal(type){
+    lastLegalType = (type === 'privacy') ? 'privacy' : 'terms';
+    const t = i18n[currentLang];
+    const data = LEGAL_CONTENT[lastLegalType];
+
+    // title
+    legalHeader.textContent = (currentLang === 'fr') ? data.title_fr : data.title_en;
+
+    // updated / last updated pills with translated labels
+    legalUpdatedPill.textContent = `${t.legalUpdated} ${data.updated}`;
+    legalLastUpdatedPill.textContent = `${t.legalLastUpdated} ${data.lastUpdated}`;
+
+    // paragraphs (language-specific)
+    const paras = (currentLang === 'fr') ? data.paragraphs_fr : data.paragraphs_en;
+    legalText.innerHTML = paras.map(p => `<p>${escapeHtml(p)}</p>`).join("");
+
+    // reset scroll to top of legal text
+    legalText.scrollTop = 0;
+  }
+
+  function openLegal(type){
+    closeDrawer();
+    renderLegal(type);
+    body.classList.add('legal-open');
+    lockBodyScroll();
+
+    // focus close button for accessibility
+    try { legalClose.focus(); } catch(e){}
+  }
+
+  function closeLegal(){
+    body.classList.remove('legal-open');
+    if(!anyModalOpen()) unlockBodyScroll();
+  }
+
+  if(termsBtn) termsBtn.addEventListener('click', (e) => { e.preventDefault(); openLegal('terms'); });
+  if(privacyBtn) privacyBtn.addEventListener('click', (e) => { e.preventDefault(); openLegal('privacy'); });
+
+  legalOverlay.addEventListener('click', closeLegal);
+  legalClose.addEventListener('click', closeLegal);
+
   /* ========= ESC closes modals/drawer ========= */
   document.addEventListener('keydown', (e) => {
     if(e.key === 'Escape'){
@@ -2275,6 +2401,7 @@
       closeNews();
       closeIOS();
       closeDonate();
+      closeLegal();
       closeDrawer();
       if(langWrap) langWrap.classList.remove('open');
     }
