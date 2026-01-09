@@ -230,7 +230,7 @@
     font-size:12px;
   }
 
-  /* Mobile/tablet language popup (NEW) */
+  /* Mobile/tablet language popup */
   .lang-mobile{ display:none; }
   .lang-mobile-btn{
     width:44px; height:44px;
@@ -985,28 +985,73 @@
   .news-modal-meta{ display:flex; gap:10px; flex-wrap:wrap; }
   .news-modal-text{ color:var(--muted); font-weight:700; line-height:1.7; }
 
-  /* iOS modal */
+  /* =========================
+     iOS MODAL (UPDATED)
+     Goal:
+     - Header stays in place (doesn't "move down") while scrolling the content
+     - Images smaller so you don't need to scroll on most screens
+     - Big image + small thumbnails below
+     - Mobile-friendly thumbs (horizontal scroll)
+     ========================= */
+
+  /* Make iOS modal NOT scroll as a whole (prevents sticky issues in some browsers). */
+  #iosModal{
+    overflow:hidden; /* header stays, content scrolls inside */
+  }
+  #iosModal .modal-header{
+    position:sticky;
+    top:0;
+    z-index:5;
+  }
+
+  .ios-scroll{
+    max-height: calc(100vh - 160px);
+    overflow:auto;
+    -webkit-overflow-scrolling: touch;
+    padding:6px;
+  }
+
   .ios-body{
     display:grid;
     grid-template-columns: 1.1fr 0.9fr;
     gap:16px;
-    padding:6px;
     text-align:left;
   }
+
   .ios-gallery{
     border:1px solid var(--border2);
     background:#0b0b0b;
     border-radius:16px;
     overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:10px;
   }
-  .ios-gallery img{ border-radius:0; width:100%; height:auto; display:block; }
+  .ios-gallery img{
+    border-radius:12px;
+    width:100%;
+    height:auto;
+    max-height: min(360px, 38vh); /* smaller = less scrolling */
+    object-fit:contain;
+    display:block;
+  }
+
+  /* Thumbs: compact */
   .ios-thumbs{
-    display:grid;
-    grid-template-columns:repeat(5, 1fr);
-    gap:10px;
     margin-top:10px;
+    display:flex;
+    gap:10px;
+    align-items:center;
+    overflow-x:auto;
+    padding-bottom:6px;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type:x mandatory;
   }
   .ios-thumb{
+    flex:0 0 auto;
+    width:64px;
+    height:64px;
     border:1px solid var(--border2);
     background:#0b0b0b;
     border-radius:14px;
@@ -1014,9 +1059,17 @@
     cursor:pointer;
     transition:.18s ease;
     padding:0;
+    scroll-snap-align:start;
+  }
+  .ios-thumb img{
+    border-radius:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
   }
   .ios-thumb:hover{ transform:translateY(-2px); border-color:var(--border); }
-  .ios-thumb img{ border-radius:0; width:100%; height:auto; display:block; }
+  .ios-thumb.active{ border-color:#fff; }
 
   .ios-steps{
     border:1px solid var(--border2);
@@ -1134,7 +1187,7 @@
     .top-actions .desktop-only{ display:none; }
     .top-socials{ display:none; }
     .lang-wrap{ display:none; } /* desktop dropdown hidden on mobile/tablet */
-    .lang-mobile{ display:inline-flex; } /* NEW mobile button shows */
+    .lang-mobile{ display:inline-flex; } /* mobile button shows */
 
     .announce-inner{
       justify-content:center;
@@ -1156,6 +1209,12 @@
       border-radius:18px;
     }
     .community-btn a{ font-size:16px; padding:14px 20px; }
+
+    /* iOS modal mobile: single column, keep compact */
+    .ios-body{ grid-template-columns:1fr; }
+    .ios-scroll{ max-height: calc(100vh - 170px); }
+    .ios-gallery img{ max-height: min(320px, 34vh); }
+    .ios-thumb{ width:58px; height:58px; border-radius:12px; }
   }
 
   @media (max-width: 900px){
@@ -1166,8 +1225,6 @@
 
   @media (max-width: 880px){
     .modal-body{ grid-template-columns:1fr; }
-    .ios-body{ grid-template-columns:1fr; }
-    .ios-thumbs{ grid-template-columns:repeat(3, 1fr); }
   }
 
   /* Smaller modals on mobile */
@@ -1189,7 +1246,6 @@
     #iosModal .ios-steps{ padding:12px; }
     #iosModal .ios-note{ font-size:12px; }
     #iosModal .ios-thumbs{ gap:8px; }
-    #iosModal .ios-thumb{ border-radius:12px; }
 
     .legal-title{ font-size:20px; }
     .legal-scroll{
@@ -1272,7 +1328,7 @@
         </div>
       </div>
 
-      <!-- NEW: Mobile/tablet language popup button (LEFT of hamburger) -->
+      <!-- Mobile/tablet language popup button -->
       <div class="lang-mobile" id="langMobileWrap">
         <button class="lang-mobile-btn" id="langMobileBtn" type="button" aria-label="Change language">
           <span class="lang-mobile-label" id="langMobileLabel">EN</span>
@@ -1585,32 +1641,35 @@
     <button class="modal-close" id="iosClose" aria-label="Close">✕</button>
   </div>
 
-  <div class="ios-body">
-    <div>
-      <div class="ios-gallery">
-        <img id="iosMainImg" src="ios1.jpeg" alt="iOS step preview">
+  <!-- IMPORTANT: only this area scrolls (header stays locked) -->
+  <div class="ios-scroll">
+    <div class="ios-body">
+      <div>
+        <div class="ios-gallery">
+          <img id="iosMainImg" src="ios1.jpeg" alt="iOS step preview">
+        </div>
+
+        <div class="ios-thumbs" id="iosThumbs" aria-label="iOS step thumbnails">
+          <button class="ios-thumb active" type="button" data-src="ios1.jpeg" aria-label="Step 1"><img src="ios1.jpeg" alt="Step 1"></button>
+          <button class="ios-thumb" type="button" data-src="ios2.png" aria-label="Step 2"><img src="ios2.png" alt="Step 2"></button>
+          <button class="ios-thumb" type="button" data-src="ios3.jpeg" aria-label="Step 3"><img src="ios3.jpeg" alt="Step 3"></button>
+          <button class="ios-thumb" type="button" data-src="ios4.jpeg" aria-label="Step 4"><img src="ios4.jpeg" alt="Step 4"></button>
+          <button class="ios-thumb" type="button" data-src="ios5.jpeg" aria-label="Step 5"><img src="ios5.jpeg" alt="Step 5"></button>
+        </div>
       </div>
 
-      <div class="ios-thumbs" id="iosThumbs">
-        <button class="ios-thumb" type="button" data-src="ios1.jpeg"><img src="ios1.jpeg" alt="Step 1"></button>
-        <button class="ios-thumb" type="button" data-src="ios2.png"><img src="ios2.png" alt="Step 2"></button>
-        <button class="ios-thumb" type="button" data-src="ios3.jpeg"><img src="ios3.jpeg" alt="Step 3"></button>
-        <button class="ios-thumb" type="button" data-src="ios4.jpeg"><img src="ios4.jpeg" alt="Step 4"></button>
-        <button class="ios-thumb" type="button" data-src="ios5.jpeg"><img src="ios5.jpeg" alt="Step 5"></button>
-      </div>
-    </div>
-
-    <div class="ios-steps">
-      <h3 id="iosStepsTitle">How to add it</h3>
-      <ol>
-        <li id="iosStep1">Open this website in Safari on your iPhone.</li>
-        <li id="iosStep2">Tap the Share button (square with arrow).</li>
-        <li id="iosStep3">Scroll and tap “Add to Home Screen”.</li>
-        <li id="iosStep4">Rename it if you want, then tap “Add”.</li>
-        <li id="iosStep5">Zafrili will appear on your Home Screen like an app.</li>
-      </ol>
-      <div class="ios-note" id="iosNote">
-        Tip: If you don’t see “Add to Home Screen”, make sure you’re using Safari.
+      <div class="ios-steps">
+        <h3 id="iosStepsTitle">How to add it</h3>
+        <ol>
+          <li id="iosStep1">Open this website in Safari on your iPhone.</li>
+          <li id="iosStep2">Tap the Share button (square with arrow).</li>
+          <li id="iosStep3">Scroll and tap “Add to Home Screen”.</li>
+          <li id="iosStep4">Rename it if you want, then tap “Add”.</li>
+          <li id="iosStep5">Zafrili will appear on your Home Screen like an app.</li>
+        </ol>
+        <div class="ios-note" id="iosNote">
+          Tip: If you don’t see “Add to Home Screen”, make sure you’re using Safari.
+        </div>
       </div>
     </div>
   </div>
@@ -1654,7 +1713,7 @@
   </div>
 </div>
 
-<!-- NEW: Language popup (mobile/tablet) -->
+<!-- Language popup (mobile/tablet) -->
 <div class="lang-pop-overlay" id="langPopOverlay"></div>
 <div class="lang-pop" id="langPop" role="dialog" aria-modal="true" aria-label="Language">
   <div class="lang-pop-head">
@@ -1969,11 +2028,10 @@
   const checkEN = document.getElementById('checkEN');
   const checkFR = document.getElementById('checkFR');
 
-  /* NEW: mobile popup elements */
+  /* mobile popup elements */
   const langMobileBtn = document.getElementById('langMobileBtn');
   const langMobileLabel = document.getElementById('langMobileLabel');
   const langPopOverlay = document.getElementById('langPopOverlay');
-  const langPop = document.getElementById('langPop');
   const langPopClose = document.getElementById('langPopClose');
   const checkEN2 = document.getElementById('checkEN2');
   const checkFR2 = document.getElementById('checkFR2');
@@ -2127,15 +2185,12 @@
     currentLang = (lang === 'fr') ? 'fr' : 'en';
     const t = i18n[currentLang];
 
-    /* labels */
     if(langLabel) langLabel.textContent = (currentLang === 'fr') ? 'FR' : 'EN';
     if(langMobileLabel) langMobileLabel.textContent = (currentLang === 'fr') ? 'FR' : 'EN';
 
-    /* checkmarks desktop */
     if(checkEN) checkEN.textContent = (currentLang === 'en') ? '✓' : '';
     if(checkFR) checkFR.textContent = (currentLang === 'fr') ? '✓' : '';
 
-    /* checkmarks mobile popup */
     if(checkEN2) checkEN2.textContent = (currentLang === 'en') ? '✓' : '';
     if(checkFR2) checkFR2.textContent = (currentLang === 'fr') ? '✓' : '';
 
@@ -2224,7 +2279,6 @@
   if(langMenu) langMenu.addEventListener('click', (e) => e.stopPropagation());
   document.addEventListener('click', () => { if(langWrap) setLangExpanded(false); });
 
-  /* NEW: Mobile popup open/close */
   function openLangPopup(){
     body.classList.add('lang-open');
     lockBodyScroll();
@@ -2234,32 +2288,28 @@
     body.classList.remove('lang-open');
     unlockBodyScrollIfSafe();
   }
+
   if(langMobileBtn){
     langMobileBtn.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
-      // Close drawer if open, so popup is clean
       closeDrawer();
       openLangPopup();
     });
   }
   if(langPopOverlay) langPopOverlay.addEventListener('click', closeLangPopup);
   if(langPopClose) langPopClose.addEventListener('click', closeLangPopup);
-  if(langPop) langPop.addEventListener('click', (e) => e.stopPropagation());
 
-  /* One listener for ALL language options (desktop + mobile popup) */
   document.querySelectorAll('.lang-option').forEach(opt => {
     opt.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
       applyLanguage(opt.dataset.lang);
-      // close both UIs safely
       setLangExpanded(false);
       closeLangPopup();
     });
   });
 
-  /* Default language */
   applyLanguage('en');
 
   /* ========= Catalog modal ========= */
@@ -2491,18 +2541,30 @@
   const iosMainImg = document.getElementById('iosMainImg');
   const iosThumbs = document.getElementById('iosThumbs');
 
-  function openIOS(){ body.classList.add('ios-open'); lockBodyScroll(); }
-  function closeIOS(){ body.classList.remove('ios-open'); unlockBodyScrollIfSafe(); }
+  function openIOS(){
+    body.classList.add('ios-open');
+    lockBodyScroll();
+  }
+  function closeIOS(){
+    body.classList.remove('ios-open');
+    unlockBodyScrollIfSafe();
+  }
 
   iosBtn.addEventListener('click', (e) => { e.preventDefault(); openIOS(); });
   iosOverlay.addEventListener('click', closeIOS);
   iosClose.addEventListener('click', closeIOS);
+
+  function setActiveIOSThumb(btn){
+    iosThumbs.querySelectorAll('.ios-thumb').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
 
   iosThumbs.addEventListener('click', (e) => {
     const btn = e.target.closest('.ios-thumb');
     if(!btn) return;
     const src = btn.getAttribute('data-src');
     if(src) iosMainImg.src = src;
+    setActiveIOSThumb(btn);
   });
 
   /* ========= Donate modal ========= */
