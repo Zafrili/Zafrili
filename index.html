@@ -21,6 +21,12 @@
     --border:rgba(255,255,255,.22);
     --border2:rgba(255,255,255,.14);
     --white:#fff;
+
+    /* NEW: sticky heights (JS will update) */
+    --ann-h: 44px;
+    --prog-h: 3px;
+    --top-h: 64px;
+    --sticky-h: calc(var(--ann-h) + var(--prog-h) + var(--top-h));
   }
 
   *{ box-sizing:border-box; margin:0; padding:0; font-family: Arial, sans-serif; }
@@ -29,8 +35,8 @@
   a{ text-decoration:none; color:inherit; }
   img{ max-width:100%; display:block; border-radius:16px; }
 
-  /* FIX: scroll alignment under sticky bars */
-  #about, #catalog, #faq, #news, #sister, #contact { scroll-margin-top: 140px; }
+  /* FIX: scroll alignment under sticky bars (uses CSS var) */
+  #about, #catalog, #faq, #news, #sister, #contact { scroll-margin-top: calc(var(--sticky-h) + 18px); }
 
   /* White scrollbar */
   ::-webkit-scrollbar{ width:10px; }
@@ -76,8 +82,13 @@
     border:1px solid var(--border);
     background:rgba(255,255,255,.06);
     font-weight:900; letter-spacing:.3px; font-size:12px;
+    flex:0 0 auto;
   }
-  .announce-text{ font-weight:900; letter-spacing:.4px; opacity:.95; white-space:nowrap; }
+  /* FIX #1: allow wrapping on mobile */
+  .announce-text{
+    font-weight:900; letter-spacing:.4px; opacity:.95;
+    white-space:nowrap;
+  }
   .shine{
     position:absolute; left:-30%; top:0; height:100%; width:40%;
     background:linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
@@ -90,7 +101,7 @@
   /* Progress */
   .progress-wrap{
     position:sticky;
-    top:44px;
+    top: var(--ann-h);
     z-index:115;
     height:3px;
     background:rgba(255,255,255,.08);
@@ -100,7 +111,9 @@
 
   /* Topbar */
   .topbar{
-    position:sticky; top:47px; z-index:110;
+    position:sticky;
+    top: calc(var(--ann-h) + var(--prog-h));
+    z-index:110;
     background:rgba(0,0,0,.72);
     backdrop-filter:blur(10px);
     border-bottom:1px solid var(--border2);
@@ -246,18 +259,75 @@
     transition:.2s ease;
     z-index:200;
   }
+
+  /* FIX #3: redesigned drawer (no scrolling needed) */
   .drawer{
     position:fixed; top:0; right:0;
-    height:100%; width:min(86vw, 360px);
+    height:100%; width:min(86vw, 380px);
     background:#0b0b0b;
     border-left:1px solid var(--border2);
     transform:translateX(100%);
     transition:.2s ease;
     z-index:210;
-    padding:18px;
-    display:flex; flex-direction:column; gap:10px;
+    padding:16px 16px 18px;
+    display:flex; flex-direction:column;
+    gap:12px;
+    overflow:hidden; /* no page-like scroll */
   }
-  .drawer h3{ text-align:left; margin:8px 0 6px; }
+
+  .drawer-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding-top:6px;
+  }
+
+  .drawer-socials{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+  .drawer-socials a{
+    width:44px; height:44px;
+    border-radius:14px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.06);
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    transition:.2s ease;
+  }
+  .drawer-socials a:hover{ background:rgba(255,255,255,.12); transform:translateY(-1px); }
+
+  .drawer .drawer-close{
+    width:44px; height:44px;
+    border-radius:14px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.06);
+    cursor:pointer;
+    display:inline-flex; align-items:center; justify-content:center;
+    font-weight:900;
+    color:#fff;
+    flex:0 0 auto;
+    transition:.2s ease;
+  }
+  .drawer .drawer-close:hover{ background:rgba(255,255,255,.12); transform:translateY(-1px); }
+
+  .drawer-title{
+    font-weight:900;
+    letter-spacing:.4px;
+    opacity:.92;
+    margin-top:2px;
+  }
+
+  .drawer-primary{
+    display:grid;
+    gap:10px;
+    margin-top:6px;
+  }
+
   .drawer a, .drawer button{
     display:flex;
     padding:14px 14px;
@@ -269,48 +339,82 @@
     cursor:pointer;
     text-align:left;
     color:#fff;
+    justify-content:flex-start;
   }
   .drawer a:hover, .drawer button:hover{ background:rgba(255,255,255,.12); transform:translateY(-1px); }
-  .drawer .drawer-close{
-    align-self:flex-end;
-    width:44px; height:44px;
-    border-radius:14px;
-    border:1px solid var(--border);
-    background:rgba(255,255,255,.06);
-    cursor:pointer;
-    display:inline-flex; align-items:center; justify-content:center;
-    font-weight:900;
-    color:#fff;
+
+  .drawer-spacer{
+    flex:1 1 auto;
+    min-height:10px;
   }
+
+  .drawer-bottom{
+    display:grid;
+    gap:10px;
+    padding-top:12px;
+    border-top:1px solid rgba(255,255,255,.10);
+  }
+
   .drawer-open .drawer-overlay{ opacity:1; pointer-events:auto; }
   .drawer-open .drawer{ transform:translateX(0); }
 
+  /* Lock scroll when drawer open */
+  body.drawer-open{ overflow:hidden; touch-action:none; }
+
   /* Banner */
   #community{ position:relative; text-align:center; padding:0; }
-  #community img{ width:100%; max-height:380px; object-fit:cover; border-radius:0; }
-  .hero-text{
-    position:absolute; left:50%; top:40%;
-    transform:translate(-50%,-50%);
-    width:min(900px, 92vw);
-    font-weight:900; letter-spacing:.4px;
-    font-size:clamp(18px, 2.2vw, 34px);
-    text-shadow:0 10px 30px rgba(0,0,0,.55);
-    padding:0 10px;
+  #community img{ width:100%; max-height:420px; object-fit:cover; border-radius:0; }
+
+  /* FIX #2: hero overlay container prevents overlap */
+  .hero-overlay{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:18px;
     z-index:3;
     pointer-events:none;
   }
+  .hero-box{
+    width:min(920px, 94vw);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:14px;
+    padding:14px 14px 16px;
+    border-radius:20px;
+    background:rgba(0,0,0,.28);
+    border:1px solid rgba(255,255,255,.12);
+    backdrop-filter: blur(8px);
+  }
+  .hero-text{
+    position:static;
+    transform:none;
+    width:100%;
+    font-weight:900; letter-spacing:.4px;
+    font-size:clamp(18px, 2.2vw, 34px);
+    text-shadow:0 10px 30px rgba(0,0,0,.55);
+    padding:0 6px;
+    pointer-events:none;
+    line-height:1.15;
+  }
+
   .community-btn a{
-    position:absolute; top:60%; left:50%;
-    transform:translate(-50%,-50%);
-    padding:18px 34px;
+    position:static;
+    transform:none;
+    pointer-events:auto; /* clickable */
+    padding:16px 26px;
     background:#fff; color:#000;
     border-radius:16px;
-    font-weight:900; font-size:18px;
+    font-weight:900; font-size:17px;
     transition:.2s ease;
     border:1px solid #fff;
-    z-index:3;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
   }
-  .community-btn a:hover{ background:#ccc; border-color:#ccc; transform:translate(-50%,-52%); }
+  .community-btn a:hover{ background:#ccc; border-color:#ccc; transform:translateY(-1px); }
 
   /* Infinite strip */
   .strip{
@@ -684,6 +788,9 @@
     position:fixed; left:50%; top:50%;
     transform:translate(-50%,-50%) scale(.98);
     width:min(980px, 92vw);
+    max-height: calc(100vh - 24px);
+    overflow:auto;
+    -webkit-overflow-scrolling: touch;
     background:var(--panel);
     border:1px solid var(--border2);
     border-radius:18px;
@@ -696,6 +803,12 @@
     display:flex; align-items:center; justify-content:space-between;
     gap:12px;
     padding:6px 6px 12px;
+    position:sticky;
+    top:0;
+    background:linear-gradient(180deg, rgba(14,14,14,.98), rgba(14,14,14,.92));
+    backdrop-filter: blur(8px);
+    border-bottom:1px solid rgba(255,255,255,.08);
+    z-index:2;
   }
   .modal-close{
     width:44px; height:44px;
@@ -719,7 +832,6 @@
   body.ios-open #iosOverlay{ opacity:1; pointer-events:auto; }
   body.ios-open #iosModal{ opacity:1; pointer-events:auto; transform:translate(-50%,-50%) scale(1); }
 
-  /* NEW: Donate modal */
   body.donate-open #donateOverlay{ opacity:1; pointer-events:auto; }
   body.donate-open #donateModal{ opacity:1; pointer-events:auto; transform:translate(-50%,-50%) scale(1); }
 
@@ -899,25 +1011,77 @@
   .to-top:hover{ background:rgba(255,255,255,.14); transform:translateY(-2px); }
   .to-top.show{ opacity:1; pointer-events:auto; }
 
+  /* Hide to-top when drawer is open (FIX #3) */
+  body.drawer-open .to-top{ opacity:0 !important; pointer-events:none !important; }
+
   @media (max-width: 920px){ .nav-tabs{ display:none; } }
+
   @media (max-width: 768px){
     .hamburger{ display:inline-flex; }
     .top-actions .desktop-only{ display:none; }
     .top-socials{ display:none; }
     .lang-wrap{ display:none; }
-    .community-btn a{ font-size:16px; padding:14px 22px; }
-    .hero-text{ top:38%; }
+
+    /* FIX #1: announcement wraps nicely */
+    .announce-inner{
+      justify-content:center;
+      flex-wrap:wrap;
+      row-gap:6px;
+      padding:10px 14px;
+    }
+    .announce-text{
+      white-space:normal;
+      text-align:center;
+      line-height:1.2;
+      font-size:13px;
+    }
+
+    /* FIX #2: banner spacing */
+    #community img{ max-height:360px; }
+    .hero-box{
+      padding:12px 12px 14px;
+      gap:12px;
+      border-radius:18px;
+    }
+    .community-btn a{ font-size:16px; padding:14px 20px; }
   }
+
   @media (max-width: 900px){
     .footer-grid{ grid-template-columns:1fr; text-align:center; gap:14px; }
     .footer-socials, .footer-pages{ align-items:center; }
     .footer-logo{ align-items:center; min-height:auto; }
   }
+
   @media (max-width: 880px){
     .modal-body{ grid-template-columns:1fr; }
     .ios-body{ grid-template-columns:1fr; }
     .ios-thumbs{ grid-template-columns:repeat(3, 1fr); }
   }
+
+  /* FIX #4 + #5: smaller modals ONLY on mobile */
+  @media (max-width: 560px){
+    .modal{
+      width: min(520px, 94vw);
+      padding:12px;
+      border-radius:16px;
+    }
+    .modal-header{
+      padding:6px 4px 10px;
+    }
+
+    /* Product modal tighter */
+    #productModal .modal-body{ gap:12px; }
+    #productModal .modal-right h2{ font-size:20px; }
+    #productModal .meta{ grid-template-columns:1fr; }
+    #productModal .chip{ font-size:13px; padding:10px; }
+
+    /* iOS modal tighter */
+    #iosModal .ios-steps{ padding:12px; }
+    #iosModal .ios-note{ font-size:12px; }
+    #iosModal .ios-thumbs{ gap:8px; }
+    #iosModal .ios-thumb{ border-radius:12px; }
+  }
+
   @media (prefers-reduced-motion: reduce){
     .strip .marquee{ animation:none; }
     .reveal{ transition:none; }
@@ -931,8 +1095,8 @@
 <div class="grain"></div>
 
 <!-- Announcement -->
-<div class="announce">
-  <div class="announce-inner">
+<div class="announce" id="announceBar">
+  <div class="announce-inner" id="announceInner">
     <div class="shine"></div>
     <span class="announce-badge" id="annBadge">WELCOME</span>
     <div class="announce-text" id="annText">Welcome to Zafrili • Premium Roblox UGC Outfits</div>
@@ -940,13 +1104,13 @@
 </div>
 
 <!-- Progress -->
-<div class="progress-wrap" aria-hidden="true">
+<div class="progress-wrap" aria-hidden="true" id="progressWrap">
   <div class="progress-bar" id="progressBar"></div>
 </div>
 
 <!-- Topbar -->
-<div class="topbar">
-  <div class="topbar-inner">
+<div class="topbar" id="topbar">
+  <div class="topbar-inner" id="topbarInner">
     <div class="brand">
       <img src="ourlogo.png" alt="Zafrili">
       <span>Zafrili</span>
@@ -998,32 +1162,58 @@
 
 <!-- Drawer (mobile) -->
 <div class="drawer-overlay" id="drawerOverlay"></div>
-<div class="drawer" id="drawer">
-  <button class="drawer-close" id="drawerClose" aria-label="Close menu">✕</button>
-  <h3 id="drawerTitle">Menu</h3>
 
-  <a href="https://www.roblox.com/communities/734952472/Zafrili#!/store" target="_blank" rel="noopener" data-no-i18n="1">Store</a>
-  <a href="#" rel="noopener" id="drawerDonate">Donate to Support</a>
-  <a href="https://www.roblox.com/communities/734952472/Zafrili#!/about" target="_blank" rel="noopener" data-no-i18n="1" id="drawerJoin">Join Community</a>
+<div class="drawer" id="drawer" aria-label="Mobile menu">
+  <div class="drawer-top">
+    <div class="drawer-socials" aria-label="Social links">
+      <a href="https://x.com/zafriliclothing" target="_blank" rel="noopener" aria-label="X" data-no-i18n="1">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M18.9 2H22l-6.8 7.8L23 22h-6.8l-5.3-6.8L4.9 22H2l7.4-8.5L1 2h7l4.8 6.2L18.9 2Zm-1.2 18h1.7L7.2 3.9H5.3L17.7 20Z"/></svg>
+      </a>
+      <a href="https://www.instagram.com/zafriliclothing/" target="_blank" rel="noopener" aria-label="Instagram" data-no-i18n="1">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm10 2H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3Zm-5 4a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm5.2-.9a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2Z"/></svg>
+      </a>
+      <a href="https://tiktok.com/@zafriliclothing" target="_blank" rel="noopener" aria-label="TikTok" data-no-i18n="1">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M16 2h2c.2 2 1.6 4.3 4 4.7V9c-1.7 0-3.1-.5-4-1.2V16a6 6 0 1 1-6-6c.4 0 .7 0 1 .1V13a3 3 0 1 0 3 3V2Z"/></svg>
+      </a>
+      <a href="https://youtube.com/@zafriliclothing" target="_blank" rel="noopener" aria-label="YouTube" data-no-i18n="1">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M21.6 7.2a3 3 0 0 0-2.1-2.1C17.7 4.6 12 4.6 12 4.6s-5.7 0-7.5.5A3 3 0 0 0 2.4 7.2 31 31 0 0 0 2 12a31 31 0 0 0 .4 4.8 3 3 0 0 0 2.1 2.1c1.8.5 7.5.5 7.5.5s5.7 0 7.5-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 22 12a31 31 0 0 0-.4-4.8ZM10 15.5v-7l6 3.5-6 3.5Z"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/company/zafrili/" target="_blank" rel="noopener" aria-label="LinkedIn" data-no-i18n="1">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M4.98 3.5A2.5 2.5 0 1 1 5 8.5a2.5 2.5 0 0 1-.02-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.1c.5-1 1.8-2 3.7-2 4 0 4.8 2.6 4.8 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4V9Z"/></svg>
+      </a>
+    </div>
 
-  <button type="button" class="btn" style="justify-content:flex-start;" data-scroll="about" id="drawerAbout">About Us</button>
-  <button type="button" class="btn" style="justify-content:flex-start;" data-scroll="faq" id="drawerFaq">FAQ</button>
-  <button type="button" class="btn" style="justify-content:flex-start;" data-scroll="news" id="drawerNews">News</button>
+    <button class="drawer-close" id="drawerClose" aria-label="Close menu">✕</button>
+  </div>
 
-  <h3 id="drawerSocialTitle">Socials</h3>
-  <a href="https://x.com/zafriliclothing" target="_blank" rel="noopener" data-no-i18n="1">X</a>
-  <a href="https://www.instagram.com/zafriliclothing/" target="_blank" rel="noopener" data-no-i18n="1">Instagram</a>
-  <a href="https://tiktok.com/@zafriliclothing" target="_blank" rel="noopener" data-no-i18n="1">TikTok</a>
-  <a href="https://youtube.com/@zafriliclothing" target="_blank" rel="noopener" data-no-i18n="1">YouTube</a>
-  <a href="https://www.linkedin.com/company/zafrili/" target="_blank" rel="noopener" data-no-i18n="1">LinkedIn</a>
+  <div class="drawer-title" id="drawerTitle">Menu</div>
+
+  <div class="drawer-primary">
+    <a href="https://www.roblox.com/communities/734952472/Zafrili#!/store" target="_blank" rel="noopener" data-no-i18n="1">Store</a>
+    <a href="#" rel="noopener" id="drawerDonate">Donate to Support</a>
+    <a href="https://www.roblox.com/communities/734952472/Zafrili#!/about" target="_blank" rel="noopener" data-no-i18n="1" id="drawerJoin">Join Community</a>
+  </div>
+
+  <div class="drawer-spacer"></div>
+
+  <div class="drawer-bottom">
+    <button type="button" class="btn" data-scroll="about" id="drawerAbout">About Us</button>
+    <button type="button" class="btn" data-scroll="faq" id="drawerFaq">FAQ</button>
+    <button type="button" class="btn" data-scroll="news" id="drawerNews">News</button>
+  </div>
 </div>
 
 <!-- Banner -->
 <section id="community" class="reveal">
   <img src="ourbannerzafrili.jpg" alt="Shop Zafrili Today on Roblox!" />
-  <div class="hero-text" id="heroText">Shop Zafrili Today on Roblox!</div>
-  <div class="community-btn">
-    <a href="https://www.roblox.com/communities/734952472/Zafrili#!/about" target="_blank" rel="noopener" id="joinBtn" data-no-i18n="1">Join Community</a>
+
+  <div class="hero-overlay">
+    <div class="hero-box">
+      <div class="hero-text" id="heroText">Shop Zafrili Today on Roblox!</div>
+      <div class="community-btn">
+        <a href="https://www.roblox.com/communities/734952472/Zafrili#!/about" target="_blank" rel="noopener" id="joinBtn" data-no-i18n="1">Join Community</a>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -1304,7 +1494,7 @@
   </div>
 </div>
 
-<!-- DONATE MODAL (NEW) -->
+<!-- DONATE MODAL -->
 <div class="modal-overlay" id="donateOverlay"></div>
 <div class="modal" id="donateModal" role="dialog" aria-modal="true" aria-label="Donate">
   <div class="modal-header">
@@ -1449,15 +1639,39 @@
 
   const body = document.body;
 
+  /* ===== NEW: sticky height calculation (Fix #1) ===== */
+  const announceBar = document.getElementById('announceBar');
+  const progressWrap = document.getElementById('progressWrap');
+  const topbar = document.getElementById('topbar');
+
+  function updateStickyHeights(){
+    const annH = announceBar ? announceBar.offsetHeight : 44;
+    const progH = progressWrap ? progressWrap.offsetHeight : 3;
+    const topH = topbar ? topbar.offsetHeight : 64;
+    document.documentElement.style.setProperty('--ann-h', annH + 'px');
+    document.documentElement.style.setProperty('--prog-h', progH + 'px');
+    document.documentElement.style.setProperty('--top-h', topH + 'px');
+  }
+  window.addEventListener('resize', updateStickyHeights, { passive:true });
+  window.addEventListener('load', updateStickyHeights);
+  updateStickyHeights();
+
   // Drawer
   const hamburgerBtn = document.getElementById('hamburgerBtn');
   const drawerOverlay = document.getElementById('drawerOverlay');
   const drawerClose = document.getElementById('drawerClose');
+  const toTopBtn = document.getElementById('toTopBtn');
 
-  function openDrawer(){ body.classList.add('drawer-open'); }
-  function closeDrawer(){ body.classList.remove('drawer-open'); }
+  function openDrawer(){
+    body.classList.add('drawer-open');
+    // optional: keep focus on close button for accessibility
+    try { drawerClose.focus(); } catch(e){}
+  }
+  function closeDrawer(){
+    body.classList.remove('drawer-open');
+  }
 
-  hamburgerBtn.addEventListener('click', openDrawer);
+  hamburgerBtn.addEventListener('click', (e) => { e.preventDefault(); openDrawer(); });
   drawerOverlay.addEventListener('click', closeDrawer);
   drawerClose.addEventListener('click', closeDrawer);
 
@@ -1478,8 +1692,10 @@
 
   // Progress + to-top
   const progressBar = document.getElementById('progressBar');
-  const toTopBtn = document.getElementById('toTopBtn');
   function onScrollUI(){
+    // If drawer is open, do nothing (Fix #3)
+    if(body.classList.contains('drawer-open')) return;
+
     const doc = document.documentElement;
     const scrollTop = doc.scrollTop || document.body.scrollTop;
     const scrollHeight = doc.scrollHeight - doc.clientHeight;
@@ -1542,134 +1758,128 @@
   const checkFR = document.getElementById('checkFR');
   let currentLang = 'en';
 
-  const i18n = { /* (same as your original i18n, unchanged) */ 
-      en: {
-    annBadge: "WELCOME",
-    annText: "Welcome to Zafrili • Premium Roblox UGC Outfits",
-    hero: "Shop Zafrili Today on Roblox!",
-    donate: "Donate to Support",
-    tabAbout: "About Us",
-    tabFaq: "FAQ",
-    tabNews: "News",
-    strip1: "NEW DROPS • ALWAYS CLEAN",
-    strip2: "BLACK & WHITE • SIGNATURE",
-    strip3: "SHOP IN ROBLOX • FAST",
-    strip4: "ZAFRILI • EST. 2026",
-    aboutTitle: "About Us",
-    aboutText:
-      "Zafrili is built for clean, modern Roblox outfits — black & white branding, minimal design, and a premium feel across every experience.",
-    catalogTitle: "Our Catalog",
-    searchLabel: "Search",
-    searchPH: "Search items...",
-    pillAll: "All",
-    pillShirt: "Classic Shirt",
-    pillPants: "Pants",
-    faqTitle: "FAQ",
-    faqQ1: "Where do I buy Zafrili items?",
-    faqA1: "All purchases happen in Roblox using the official product links on this website.",
-    faqQ2: "Are items tradeable?",
-    faqA2: "Most clothing items are not tradeable. Check the product popup for each item’s details.",
-    faqQ3: "How do I wear the outfit in Roblox?",
-    faqA3: "After buying, open your Roblox Avatar Editor and equip the shirt/pants from your inventory.",
-    faqQ4: "I have a question — how do I contact you?",
-    faqA4: "Email us at contact.zafrili@gmail.com and we’ll get back to you.",
-    newsTitle: "News",
-    sisterTitle: "Sister Companies",
-    sisterDesc: "A sister company focused on building experiences and creative projects.",
-    contactTitle: "Contact Us",
-    contactDesc: "If you have any questions or inquiries, feel free to reach out to us!",
-    emailLabel: "Email us at:",
-    footerCopy: "©2026. Zafrili. All Rights Reserved. All purchases happen in Roblox.",
-    terms: "Terms and Conditions",
-    privacy: "Privacy Policy",
-    modalHeader: "Product Details",
-    madeBy: "Made by:",
-    tradeable: "Tradeable:",
-    type: "Type:",
-    created: "Created:",
-    prev: "Previous",
-    next: "Next Item",
-    drawerTitle: "Menu",
-    drawerAbout: "About Us",
-    drawerFaq: "FAQ",
-    drawerNews: "News",
-    drawerSocialTitle: "Socials",
-    iosBtn: "Available on iOS",
-    iosHeader: "Add Zafrili to your Home Screen",
-    iosStepsTitle: "How to add it",
-    iosStep1: "Open this website in Safari on your iPhone.",
-    iosStep2: "Tap the Share button (square with arrow).",
-    iosStep3: "Scroll and tap “Add to Home Screen”.",
-    iosStep4: "Rename it if you want, then tap “Add”.",
-    iosStep5: "Zafrili will appear on your Home Screen like an app.",
-    iosNote: "Tip: If you don’t see “Add to Home Screen”, make sure you’re using Safari."
-  },
+  const i18n = {
+    en: {
+      annBadge: "WELCOME",
+      annText: "Welcome to Zafrili • Premium Roblox UGC Outfits",
+      hero: "Shop Zafrili Today on Roblox!",
+      donate: "Donate to Support",
+      tabAbout: "About Us",
+      tabFaq: "FAQ",
+      tabNews: "News",
+      strip1: "NEW DROPS • ALWAYS CLEAN",
+      strip2: "BLACK & WHITE • SIGNATURE",
+      strip3: "SHOP IN ROBLOX • FAST",
+      strip4: "ZAFRILI • EST. 2026",
+      aboutTitle: "About Us",
+      aboutText:
+        "Zafrili is built for clean, modern Roblox outfits — black & white branding, minimal design, and a premium feel across every experience.",
+      catalogTitle: "Our Catalog",
+      searchLabel: "Search",
+      searchPH: "Search items...",
+      pillAll: "All",
+      pillShirt: "Classic Shirt",
+      pillPants: "Pants",
+      faqTitle: "FAQ",
+      faqQ1: "Where do I buy Zafrili items?",
+      faqA1: "All purchases happen in Roblox using the official product links on this website.",
+      faqQ2: "Are items tradeable?",
+      faqA2: "Most clothing items are not tradeable. Check the product popup for each item’s details.",
+      faqQ3: "How do I wear the outfit in Roblox?",
+      faqA3: "After buying, open your Roblox Avatar Editor and equip the shirt/pants from your inventory.",
+      faqQ4: "I have a question — how do I contact you?",
+      faqA4: "Email us at contact.zafrili@gmail.com and we’ll get back to you.",
+      newsTitle: "News",
+      sisterTitle: "Sister Companies",
+      sisterDesc: "A sister company focused on building experiences and creative projects.",
+      contactTitle: "Contact Us",
+      contactDesc: "If you have any questions or inquiries, feel free to reach out to us!",
+      emailLabel: "Email us at:",
+      footerCopy: "©2026. Zafrili. All Rights Reserved. All purchases happen in Roblox.",
+      terms: "Terms and Conditions",
+      privacy: "Privacy Policy",
+      modalHeader: "Product Details",
+      madeBy: "Made by:",
+      tradeable: "Tradeable:",
+      type: "Type:",
+      created: "Created:",
+      prev: "Previous",
+      next: "Next Item",
+      drawerTitle: "Menu",
+      drawerAbout: "About Us",
+      drawerFaq: "FAQ",
+      drawerNews: "News",
+      iosBtn: "Available on iOS",
+      iosHeader: "Add Zafrili to your Home Screen",
+      iosStepsTitle: "How to add it",
+      iosStep1: "Open this website in Safari on your iPhone.",
+      iosStep2: "Tap the Share button (square with arrow).",
+      iosStep3: "Scroll and tap “Add to Home Screen”.",
+      iosStep4: "Rename it if you want, then tap “Add”.",
+      iosStep5: "Zafrili will appear on your Home Screen like an app.",
+      iosNote: "Tip: If you don’t see “Add to Home Screen”, make sure you’re using Safari."
+    },
     fr: {
-    annBadge: "BIENVENUE",
-    annText: "Bienvenue sur Zafrili • Tenues Roblox UGC Premium",
-    hero: "Achetez Zafrili sur Roblox !",
-    donate: "Faire un don",
-    tabAbout: "À propos",
-    tabFaq: "FAQ",
-    tabNews: "Actualités",
-    strip1: "NOUVEAUTÉS • TOUJOURS PROPRE",
-    strip2: "NOIR & BLANC • SIGNATURE",
-    strip3: "ACHETER SUR ROBLOX • RAPIDE",
-    strip4: "ZAFRILI • EST. 2026",
-    aboutTitle: "À propos",
-    aboutText:
-      "Zafrili crée des tenues Roblox propres et modernes — identité noir & blanc, design minimal, et une finition premium sur toute l’expérience.",
-    catalogTitle: "Notre catalogue",
-    searchLabel: "Rechercher",
-    searchPH: "Rechercher des articles...",
-    pillAll: "Tout",
-    pillShirt: "T-shirt classique",
-    pillPants: "Pantalon",
-    faqTitle: "FAQ",
-    faqQ1: "Où acheter les articles Zafrili ?",
-    faqA1: "Tous les achats se font sur Roblox via les liens officiels sur ce site.",
-    faqQ2: "Les articles sont-ils échangeables ?",
-    faqA2: "La plupart des vêtements ne sont pas échangeables. Vérifiez la fenêtre d’info de chaque article.",
-    faqQ3: "Comment porter la tenue dans Roblox ?",
-    faqA3: "Après l’achat, ouvrez l’éditeur d’avatar Roblox et équipez le t-shirt/pantalon depuis votre inventaire.",
-    faqQ4: "J’ai une question — comment vous contacter ?",
-    faqA4: "Écrivez-nous à contact.zafrili@gmail.com et nous vous répondrons.",
-    newsTitle: "Actualités",
-    sisterTitle: "Sociétés associées",
-    sisterDesc: "Une société associée axée sur la création d’expériences et de projets créatifs.",
-    contactTitle: "Nous contacter",
-    contactDesc: "Si vous avez des questions ou des demandes, n’hésitez pas à nous contacter !",
-    emailLabel: "Écrivez-nous à :",
-    footerCopy: "©2026. Zafrili. Tous droits réservés. Tous les achats se font sur Roblox.",
-    terms: "Conditions générales",
-    privacy: "Politique de confidentialité",
-    modalHeader: "Détails du produit",
-    madeBy: "Créé par :",
-    tradeable: "Échangeable :",
-    type: "Type :",
-    created: "Créé :",
-    prev: "Précédent",
-    next: "Suivant",
-    drawerTitle: "Menu",
-    drawerAbout: "À propos",
-    drawerFaq: "FAQ",
-    drawerNews: "Actualités",
-    drawerSocialTitle: "Réseaux",
-    iosBtn: "Disponible sur iOS",
-    iosHeader: "Ajouter Zafrili à l’écran d’accueil",
-    iosStepsTitle: "Comment l’ajouter",
-    iosStep1: "Ouvrez ce site dans Safari sur votre iPhone.",
-    iosStep2: "Touchez le bouton Partager (carré avec flèche).",
-    iosStep3: "Faites défiler et touchez « Sur l’écran d’accueil ». ",
-    iosStep4: "Renommez si vous voulez, puis touchez « Ajouter ».",
-    iosStep5: "Zafrili apparaîtra sur votre écran d’accueil comme une appli.",
-    iosNote: "Astuce : si « Sur l’écran d’accueil » n’apparaît pas, utilisez Safari."
-  }
+      annBadge: "BIENVENUE",
+      annText: "Bienvenue sur Zafrili • Tenues Roblox UGC Premium",
+      hero: "Achetez Zafrili sur Roblox !",
+      donate: "Faire un don",
+      tabAbout: "À propos",
+      tabFaq: "FAQ",
+      tabNews: "Actualités",
+      strip1: "NOUVEAUTÉS • TOUJOURS PROPRE",
+      strip2: "NOIR & BLANC • SIGNATURE",
+      strip3: "ACHETER SUR ROBLOX • RAPIDE",
+      strip4: "ZAFRILI • EST. 2026",
+      aboutTitle: "À propos",
+      aboutText:
+        "Zafrili crée des tenues Roblox propres et modernes — identité noir & blanc, design minimal, et une finition premium sur toute l’expérience.",
+      catalogTitle: "Notre catalogue",
+      searchLabel: "Rechercher",
+      searchPH: "Rechercher des articles...",
+      pillAll: "Tout",
+      pillShirt: "T-shirt classique",
+      pillPants: "Pantalon",
+      faqTitle: "FAQ",
+      faqQ1: "Où acheter les articles Zafrili ?",
+      faqA1: "Tous les achats se font sur Roblox via les liens officiels sur ce site.",
+      faqQ2: "Les articles sont-ils échangeables ?",
+      faqA2: "La plupart des vêtements ne sont pas échangeables. Vérifiez la fenêtre d’info de chaque article.",
+      faqQ3: "Comment porter la tenue dans Roblox ?",
+      faqA3: "Après l’achat, ouvrez l’éditeur d’avatar Roblox et équipez le t-shirt/pantalon depuis votre inventaire.",
+      faqQ4: "J’ai une question — comment vous contacter ?",
+      faqA4: "Écrivez-nous à contact.zafrili@gmail.com et nous vous répondrons.",
+      newsTitle: "Actualités",
+      sisterTitle: "Sociétés associées",
+      sisterDesc: "Une société associée axée sur la création d’expériences et de projets créatifs.",
+      contactTitle: "Nous contacter",
+      contactDesc: "Si vous avez des questions ou des demandes, n’hésitez pas à nous contacter !",
+      emailLabel: "Écrivez-nous à :",
+      footerCopy: "©2026. Zafrili. Tous droits réservés. Tous les achats se font sur Roblox.",
+      terms: "Conditions générales",
+      privacy: "Politique de confidentialité",
+      modalHeader: "Détails du produit",
+      madeBy: "Créé par :",
+      tradeable: "Échangeable :",
+      type: "Type :",
+      created: "Créé :",
+      prev: "Précédent",
+      next: "Suivant",
+      drawerTitle: "Menu",
+      drawerAbout: "À propos",
+      drawerFaq: "FAQ",
+      drawerNews: "Actualités",
+      iosBtn: "Disponible sur iOS",
+      iosHeader: "Ajouter Zafrili à l’écran d’accueil",
+      iosStepsTitle: "Comment l’ajouter",
+      iosStep1: "Ouvrez ce site dans Safari sur votre iPhone.",
+      iosStep2: "Touchez le bouton Partager (carré avec flèche).",
+      iosStep3: "Faites défiler et touchez « Sur l’écran d’accueil ». ",
+      iosStep4: "Renommez si vous voulez, puis touchez « Ajouter ».",
+      iosStep5: "Zafrili apparaîtra sur votre écran d’accueil comme une appli.",
+      iosNote: "Astuce : si « Sur l’écran d’accueil » n’apparaît pas, utilisez Safari."
+    }
   };
-
-  // Keep your original i18n content by pasting it back here:
-  // I removed it only to keep this message from becoming insanely long.
-  // (If you want, tell me and I’ll paste it fully in.)
 
   function setText(id, value){
     const el = document.getElementById(id);
@@ -1737,7 +1947,6 @@
     setText('drawerAbout', t.drawerAbout);
     setText('drawerFaq', t.drawerFaq);
     setText('drawerNews', t.drawerNews);
-    setText('drawerSocialTitle', t.drawerSocialTitle);
 
     setText('iosBtn', t.iosBtn);
     setText('iosHeader', t.iosHeader);
@@ -1748,6 +1957,9 @@
     setText('iosStep4', t.iosStep4);
     setText('iosStep5', t.iosStep5);
     setText('iosNote', t.iosNote);
+
+    // keep sticky heights accurate after text change
+    updateStickyHeights();
   }
 
   const setLangExpanded = (open) => {
@@ -1755,12 +1967,14 @@
     langBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
   };
 
-  langBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setLangExpanded(!langWrap.classList.contains('open'));
-  });
-  langMenu.addEventListener('click', (e) => e.stopPropagation());
+  if(langBtn){
+    langBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setLangExpanded(!langWrap.classList.contains('open'));
+    });
+  }
+  if(langMenu) langMenu.addEventListener('click', (e) => e.stopPropagation());
 
   document.querySelectorAll('.lang-option').forEach(opt => {
     opt.addEventListener('click', (e) => {
@@ -1770,10 +1984,10 @@
       setLangExpanded(false);
     });
   });
-  document.addEventListener('click', () => setLangExpanded(false));
+  document.addEventListener('click', () => { if(langWrap) setLangExpanded(false); });
 
-  // IMPORTANT: keep default language
-  // applyLanguage('en');  // will work once you paste back full i18n
+  // Default language
+  applyLanguage('en');
 
   /* ========= Catalog modal ========= */
   const catalogGrid = document.getElementById('catalogGrid');
@@ -1814,13 +2028,24 @@
   let currentList = [];
   let currentItemIndex = 0;
 
+  function lockBodyScroll(){
+    body.style.overflow = 'hidden';
+    body.style.touchAction = 'none';
+  }
+  function unlockBodyScroll(){
+    if(!body.classList.contains('drawer-open')){
+      body.style.overflow = '';
+      body.style.touchAction = '';
+    }
+  }
+
   function openProductModal(){
     body.classList.add('product-open');
-    body.style.overflow = 'hidden';
+    lockBodyScroll();
   }
   function closeProductModal(){
     body.classList.remove('product-open');
-    body.style.overflow = '';
+    unlockBodyScroll();
   }
 
   function setMainImageByIndex(idx){
@@ -1916,10 +2141,9 @@
     }
   }
 
-  // FIX: explicitly handle info button clicks too (extra reliability)
   catalogGrid.addEventListener('click', (e) => {
     const buyLink = e.target.closest('a.buy');
-    if(buyLink) return; // let Buy Now go to Roblox
+    if(buyLink) return;
 
     const card = e.target.closest('.catalog-item');
     if(!card) return;
@@ -1964,8 +2188,8 @@
   const newsModalDate = document.getElementById('newsModalDate');
   const newsModalText = document.getElementById('newsModalText');
 
-  function openNews(){ body.classList.add('news-open'); body.style.overflow = 'hidden'; }
-  function closeNews(){ body.classList.remove('news-open'); body.style.overflow = ''; }
+  function openNews(){ body.classList.add('news-open'); lockBodyScroll(); }
+  function closeNews(){ body.classList.remove('news-open'); unlockBodyScroll(); }
 
   function escapeHtml(str){
     return str.replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -1999,7 +2223,6 @@
   }
   renderNews();
 
-  // FIX: ensure click always fires
   newsCard.addEventListener('click', (e) => { e.preventDefault(); renderNews(); openNews(); });
   newsOverlay.addEventListener('click', closeNews);
   newsClose.addEventListener('click', closeNews);
@@ -2011,8 +2234,8 @@
   const iosMainImg = document.getElementById('iosMainImg');
   const iosThumbs = document.getElementById('iosThumbs');
 
-  function openIOS(){ body.classList.add('ios-open'); body.style.overflow = 'hidden'; }
-  function closeIOS(){ body.classList.remove('ios-open'); body.style.overflow = ''; }
+  function openIOS(){ body.classList.add('ios-open'); lockBodyScroll(); }
+  function closeIOS(){ body.classList.remove('ios-open'); unlockBodyScroll(); }
 
   iosBtn.addEventListener('click', (e) => { e.preventDefault(); openIOS(); });
   iosOverlay.addEventListener('click', closeIOS);
@@ -2025,14 +2248,14 @@
     if(src) iosMainImg.src = src;
   });
 
-  /* ========= Donate modal (NEW) ========= */
+  /* ========= Donate modal ========= */
   const donateBtn = document.getElementById('donateBtn');
   const drawerDonate = document.getElementById('drawerDonate');
   const donateOverlay = document.getElementById('donateOverlay');
   const donateClose = document.getElementById('donateClose');
 
-  function openDonate(){ body.classList.add('donate-open'); body.style.overflow = 'hidden'; }
-  function closeDonate(){ body.classList.remove('donate-open'); body.style.overflow = ''; }
+  function openDonate(){ body.classList.add('donate-open'); lockBodyScroll(); }
+  function closeDonate(){ body.classList.remove('donate-open'); unlockBodyScroll(); }
 
   function wireDonate(el){
     if(!el) return;
@@ -2055,7 +2278,7 @@
       closeIOS();
       closeDonate();
       closeDrawer();
-      if(langWrap) setLangExpanded(false);
+      if(langWrap) langWrap.classList.remove('open');
     }
     if(body.classList.contains('product-open')){
       if(e.key === 'ArrowRight') setMainImageByIndex(currentImageIndex + 1);
